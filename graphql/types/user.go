@@ -15,25 +15,25 @@ func GetUserType() *graphql.Object {
 				"title": &graphql.Field{
 					Type: graphql.String,
 				},
-				"first_name": &graphql.Field{
+				"firstname": &graphql.Field{
 					Type: graphql.String,
 				},
-				"last_name": &graphql.Field{
+				"lastname": &graphql.Field{
 					Type: graphql.String,
 				},
 				"email": &graphql.Field{
 					Type: graphql.String,
 				},
-				"is_email_confirm": &graphql.Field{
+				"isemailconfirm": &graphql.Field{
 					Type: graphql.Int,
 				},
-				"phone_code": &graphql.Field{
+				"phonecode": &graphql.Field{
 					Type: graphql.String,
 				},
 				"phone": &graphql.Field{
 					Type: graphql.String,
 				},
-				"is_phone_confirm": &graphql.Field{
+				"isphoneconfirm": &graphql.Field{
 					Type: graphql.Int,
 				},
 				"password": &graphql.Field{
@@ -45,7 +45,7 @@ func GetUserType() *graphql.Object {
 				"address": &graphql.Field{
 					Type: graphql.String,
 				},
-				"zip_code": &graphql.Field{
+				"zipcode": &graphql.Field{
 					Type: graphql.Int,
 				},
 			},

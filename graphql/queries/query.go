@@ -1,20 +1,19 @@
 package queries
 
-
 import (
 	"../../resolvers"
-	"./types"
+	"../types"
 	"github.com/graphql-go/graphql"
 )
 
-func GetUserRoot() *graphql.Object {
-	
+func Root() *graphql.Object {
+
 	return graphql.NewObject(graphql.ObjectConfig{
-		Name:        "UserQuery",
-		Fields:      graphql.Fields{
+		Name: "Query",
+		Fields: graphql.Fields{
 			"AllUser": {
-				Type: graphql.NewList(types.GetUserType()),
-				Resolve: resolvers.AllUsers,
+				Type:        graphql.NewList(types.GetUserType()),
+				Resolve:     resolvers.AllUsers,
 				Description: "Get All Users",
 			},
 			"User": {
@@ -24,11 +23,10 @@ func GetUserRoot() *graphql.Object {
 						Type: graphql.NewNonNull(graphql.Int),
 					},
 				},
-				Resolve: resolvers.AllUsers,
+				Resolve:     resolvers.GetUser,
 				Description: "Get User",
 			},
 		},
-		Description: "",
 	})
-	
+
 }

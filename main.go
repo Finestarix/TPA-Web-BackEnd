@@ -1,6 +1,7 @@
 package main
 
 import (
+	"./graphql/mutations"
 	"./graphql/queries"
 	"./middleware"
 	"github.com/graphql-go/graphql"
@@ -12,8 +13,8 @@ import (
 func main() {
 
 	schema, err := graphql.NewSchema(graphql.SchemaConfig{
-		Query:        queries.GetUserRoot(),
-		Mutation:     nil,
+		Query:    queries.Root(),
+		Mutation: mutations.Root(),
 	})
 
 	if err != nil {
@@ -21,14 +22,13 @@ func main() {
 	}
 
 	handlerSchema := handler.New(&handler.Config{
-		Schema:           &schema,
-		Pretty:           true,
-		GraphiQL:         true,
-		Playground:       true,
+		Schema:     &schema,
+		Pretty:     true,
+		GraphiQL:   true,
+		Playground: true,
 	})
 
 	newHandlerSchema := middleware.SetCORS(handlerSchema)
 
-	log.Fatal(http.ListenAndServe(":8080", newHandlerSchema))
-
+	log.Fatal(http.ListenAndServe(":4201", newHandlerSchema))
 }

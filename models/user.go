@@ -66,7 +66,7 @@ func GetUser(id int) User {
 	return user[0]
 }
 
-func InsertUser(firstName string, lastName string, email string, phoneCode string, phone string, password string) (*User, error) {
+func InsertUser(firstName string, lastName string, email string, phoneCode string, phone string, password string) *User {
 	database := connection.GetConnection()
 	defer database.Close()
 
@@ -81,7 +81,7 @@ func InsertUser(firstName string, lastName string, email string, phoneCode strin
 	database.Save(newUser)
 
 	log.Println("Insert New User Success")
-	return newUser, nil
+	return newUser
 }
 
 func UpdateUserProfile(id int, title string, firstName string, lastName string, city string, address string, zipCode int) *User {

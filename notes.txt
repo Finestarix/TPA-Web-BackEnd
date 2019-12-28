@@ -1,0 +1,68 @@
+Template Insert User
+> Function
+mutation insertNewUser($firstname: String!, $lastname: String!, $email: String!, $phonecode: String!, $phone: String!, $password: String!) {
+  InsertNewUser(firstname: $firstname, lastname: $lastname, email: $email, phonecode: $phonecode, phone: $phone, password: $password){
+    firstname,
+    lastname,
+  }
+}
+> Variable
+{
+  "firstname" : "Ignatius",
+  "lastname" : "Renaldy",
+  "email" : "renaldy@binus.edu",
+  "phonecode" : "+62",
+  "phone" : "8998278243",
+  "password" : "rxrxrx"
+}
+
+
+Template Update User
+> Function
+mutation updateUser($id: Int!, $title: String!, $firstname: String!, $lastname: String!, $city: String!, $address: String!, $zipcode: Int!) {
+  UpdateUserProfile(id: $id, title: $title, firstname: $firstname, lastname: $lastname, city: $city, address: $address, zipcode: $zipcode){
+    title,
+		firstname,
+    lastname,
+  }
+}
+> Variable
+{
+  "id": 7,
+  "title": "Mr. ",
+  "firstname": "Ignatius",
+  "lastname": "Renaldy",
+  "city": "Jakarta",
+  "address": "Tanjung Duren Utara",
+  "zipcode": 11470
+}
+
+
+Template Delete User
+> Function
+mutation deleteUser($id:Int!) {
+  DeleteUser(id: $id){
+    firstname,
+    lastname
+  }
+}
+> Variable
+{
+  "id" : 2
+}
+
+
+Template AllUser
+{
+  AllUser {
+    id
+    title
+    firstname
+    lastname
+    email
+    phone
+    city
+    address
+    zipcode
+  }
+}
