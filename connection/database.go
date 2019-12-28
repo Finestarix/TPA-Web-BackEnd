@@ -41,6 +41,10 @@ func init() {
 	fmt.Println(connectionString)
 }
 
-func ConnectDatabase() (*gorm.DB, error) {
-	return gorm.Open(databaseType, connectionString)
+func GetConnection() *gorm.DB {
+	database, error := gorm.Open(databaseType, connectionString)
+	if error != nil {
+		panic("Connection Failed !" + string(error.Error()))
+	}
+	return database
 }
