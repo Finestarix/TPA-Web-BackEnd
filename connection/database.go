@@ -1,7 +1,6 @@
 package connection
 
 import (
-	"fmt"
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/postgres"
 	//"github.com/lib/pq"
@@ -14,7 +13,6 @@ var databaseName, databasePassword, databaseUser, databaseHost, databasePort, da
 var connectionString string
 
 func init() {
-
 	err := godotenv.Load()
 
 	if err != nil {
@@ -37,8 +35,6 @@ func init() {
 						"host=" + databaseHost + " " +
 						"port=" + databasePort + " " +
 						"sslmode=" + databaseSSL
-
-	fmt.Println(connectionString)
 }
 
 func GetConnection() *gorm.DB {

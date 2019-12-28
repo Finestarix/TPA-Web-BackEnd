@@ -7,14 +7,22 @@ import (
 )
 
 type User struct {
-	ID        int 		`gorm:"PRIMARY_KEY"`
-	CreatedAt time.Time
-	UpdatedAt time.Time
-	DeletedAt *time.Time `sql:"index"`
-	Name      string     `gorm:"VARCHAR(100); NOT NULL"`
-	Email     string     `gorm:"VARCHAR(100); NOT NULL"`
-	Phone     string     `gorm:"VARCHAR(100); NOT NULL"`
-	Password  string     `gorm:"VARCHAR(100); NOT NULL"`
+	ID             int    `gorm:"PRIMARY_KEY"`
+	Title          string `gorm:"VARCHAR(100);"`
+	FirstName      string `gorm:"VARCHAR(100); NOT NULL"`
+	LastName       string `gorm:"VARCHAR(100); NOT NULL"`
+	Email          string `gorm:"VARCHAR(100); NOT NULL; UNIQUE"`
+	IsEmailConfirm int    `gorm:"INTEGER"`
+	PhoneCode      string `gorm:"VARCHAR(100); NOT NULL"`
+	Phone          string `gorm:"VARCHAR(100); NOT NULL"`
+	IsPhoneConfirm int    `gorm:"INTEGER"`
+	Password       string `gorm:"VARCHAR(100); NOT NULL"`
+	City           string `gorm:"VARCHAR(100)"`
+	Address        string `gorm:"VARCHAR(100)"`
+	ZipCode        int    `gorm:"INTEGER"`
+	CreatedAt      time.Time
+	UpdatedAt      time.Time
+	DeletedAt      *time.Time `sql:"index"`
 }
 
 func init() {
@@ -58,15 +66,17 @@ func GetUser(id int) User {
 	return user[0]
 }
 
-func InsertUser(name string, email string, phone string, password string) (*User, error) {
+func InsertUser(firstName string, lastName string, email string, phoneCode string, phone string, password string) (*User, error) {
 	database := connection.GetConnection()
 	defer database.Close()
 
 	newUser := &User{
-		Name:     name,
-		Email:    email,
-		Phone:    phone,
-		Password: password,
+		FirstName: firstName,
+		LastName:  lastName,
+		Email:     email,
+		PhoneCode: phoneCode,
+		Phone:     phone,
+		Password:  password,
 	}
 	database.Save(newUser)
 
@@ -74,7 +84,7 @@ func InsertUser(name string, email string, phone string, password string) (*User
 	return newUser, nil
 }
 
-func UpdateUser(id int, name string, email string, phone string, password string) *User {
+func UpdateUserProfile(id int, title string, firstName string, lastName string, city string, address string, zipCode int) *User {
 	database := connection.GetConnection()
 	defer database.Close()
 
@@ -83,10 +93,12 @@ func UpdateUser(id int, name string, email string, phone string, password string
 		Model(&user).
 		Where("id = ?", id).
 		Updates(map[string]interface{}{
-			"name":     name,
-			"email":    email,
-			"phone":    phone,
-			"password": password,
+			"title":     title,
+			"first_name": firstName,
+			"last_name":  lastName,
+			"city":      city,
+			"address":   address,
+			"zip_code":   zipCode,
 		})
 	database.
 		Where("id = ?", id).
