@@ -51,7 +51,7 @@ func GetAllUser() []User {
 	return users
 }
 
-func GetUser(id int) User {
+func GetUserByID(id int) []User {
 	database := connection.GetConnection()
 	defer database.Close()
 
@@ -59,11 +59,36 @@ func GetUser(id int) User {
 	database.
 		Where("id = ?", id).
 		Find(&user)
-	if len(user) == 0 {
-		panic("There is No User")
-	}
 
-	return user[0]
+	return user
+}
+
+func GetUserByPhone(phone string) []User {
+	database := connection.GetConnection()
+	defer database.Close()
+
+	var user []User
+	database.
+		Where("phone = ?", phone).
+		Find(&user)
+
+	log.Println("Someone Search User by Phone")
+
+	return user
+}
+
+func GetUserByEmail(email string) []User {
+	database := connection.GetConnection()
+	defer database.Close()
+
+	var user []User
+	database.
+		Where("email = ?", email).
+		Find(&user)
+
+	log.Println("Someone Search User by Email")
+
+	return user
 }
 
 func InsertUser(firstName string, lastName string, email string, phoneCode string, phone string, password string) *User {
@@ -112,7 +137,13 @@ func DeleteUser(id int) *User {
 	database := connection.GetConnection()
 	defer database.Close()
 
-	var user User = GetUser(id)
+	var users []User = GetUserByID(id)
+
+	if len(users) != 0 {
+		return nil
+	}
+
+	var user = users[0]
 	error := database.Delete(user).Error
 	if error != nil {
 		panic("Error Delete User !" + error.Error())

@@ -16,15 +16,25 @@ func Root() *graphql.Object {
 				Resolve:     resolvers.AllUsers,
 				Description: "Get All Users",
 			},
-			"User": {
+			"UserByID": {
 				Type: graphql.NewList(types.GetUserType()),
 				Args: graphql.FieldConfigArgument{
 					"id": &graphql.ArgumentConfig{
 						Type: graphql.NewNonNull(graphql.Int),
 					},
 				},
-				Resolve:     resolvers.GetUser,
-				Description: "Get User",
+				Resolve:     resolvers.GetUserByID,
+				Description: "Get User By ID",
+			},
+			"UserByEmailAndPhone": {
+				Type: graphql.NewList(types.GetUserType()),
+				Args: graphql.FieldConfigArgument{
+					"emailphone": &graphql.ArgumentConfig{
+						Type: graphql.NewNonNull(graphql.String),
+					},
+				},
+				Resolve: resolvers.GetUserByPhoneEmail,
+				Description: "Get User By Email or Phone",
 			},
 		},
 	})

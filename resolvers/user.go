@@ -10,9 +10,20 @@ func AllUsers(p graphql.ResolveParams) (i interface{}, err error) {
 	return users, nil
 }
 
-func GetUser(p graphql.ResolveParams) (i interface{}, err error) {
+func GetUserByID(p graphql.ResolveParams) (i interface{}, err error) {
 	searchID := p.Args["id"].(int)
-	user := models.GetUser(searchID)
+	user := models.GetUserByID(searchID)
+	return user, nil
+}
+
+func GetUserByPhoneEmail(p graphql.ResolveParams) (i interface{}, err error) {
+	searchEmailPhone := p.Args["emailphone"].(string)
+	user := models.GetUserByEmail(searchEmailPhone)
+
+	if len(user) == 0 {
+		user = models.GetUserByPhone(searchEmailPhone)
+	}
+
 	return user, nil
 }
 
