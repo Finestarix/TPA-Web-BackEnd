@@ -33,14 +33,37 @@ func Root() *graphql.Object {
 						Type: graphql.NewNonNull(graphql.String),
 					},
 				},
-				Resolve: resolvers.GetUserByPhoneEmail,
+				Resolve:     resolvers.GetUserByPhoneEmail,
 				Description: "Get User By Email or Phone",
+			},
+			"UserLogin": {
+				Type: graphql.NewList(types.GetUserType()),
+				Args: graphql.FieldConfigArgument{
+					"emailphone": &graphql.ArgumentConfig{
+						Type: graphql.NewNonNull(graphql.String),
+					},
+					"password": &graphql.ArgumentConfig{
+						Type: graphql.NewNonNull(graphql.String),
+					},
+				},
+				Resolve:     resolvers.UserLogin,
+				Description: "User Login (Email, Phone, Password)",
 			},
 
 			"AllPhoneCode": {
-				Type: graphql.NewList(types.GetPhoneCodeType()),
-				Resolve: resolvers.AllPhoneCode,
+				Type:        graphql.NewList(types.GetPhoneCodeType()),
+				Resolve:     resolvers.AllPhoneCode,
 				Description: "Get All Phone Code",
+			},
+			"GetPhoneCode": {
+				Type: graphql.NewList(types.GetPhoneCodeType()),
+				Args: graphql.FieldConfigArgument{
+					"phonecode": &graphql.ArgumentConfig{
+						Type: graphql.NewNonNull(graphql.String),
+					},
+				},
+				Resolve:     resolvers.GetPhoneCode,
+				Description: "Get Phone Code",
 			},
 		},
 	})

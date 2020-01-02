@@ -27,6 +27,19 @@ func GetUserByPhoneEmail(p graphql.ResolveParams) (i interface{}, err error) {
 	return user, nil
 }
 
+func UserLogin(p graphql.ResolveParams) (i interface{}, err error) {
+	searchEmailPhone := p.Args["emailphone"].(string)
+	searchPassword := p.Args["password"].(string)
+
+	user := models.GetUserByEmailAndPassword(searchEmailPhone, searchPassword)
+
+	if len(user) == 0 {
+		user = models.GetUserByPhoneAndPassword(searchEmailPhone, searchPassword)
+	}
+
+	return user, nil
+}
+
 func InsertUser(p graphql.ResolveParams) (i interface{}, err error) {
 	firstname := p.Args["firstname"].(string)
 	lastname := p.Args["lastname"].(string)

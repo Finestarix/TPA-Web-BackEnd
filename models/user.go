@@ -74,8 +74,6 @@ func GetUserByPhone(phone string) []User {
 		Where("phone = ?", phone).
 		Find(&user)
 
-	log.Println("Someone Search User by Phone")
-
 	return user
 }
 
@@ -88,7 +86,29 @@ func GetUserByEmail(email string) []User {
 		Where("email = ?", email).
 		Find(&user)
 
-	log.Println("Someone Search User by Email")
+	return user
+}
+
+func GetUserByPhoneAndPassword(phone string, password string) []User {
+	database := connection.GetConnection()
+	defer database.Close()
+
+	var user []User
+	database.
+		Where("phone = ? AND password = ?", phone, password).
+		Find(&user)
+
+	return user
+}
+
+func GetUserByEmailAndPassword(email string, password string) []User {
+	database := connection.GetConnection()
+	defer database.Close()
+
+	var user []User
+	database.
+		Where("email = ? AND password = ?", email, password).
+		Find(&user)
 
 	return user
 }
