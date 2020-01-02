@@ -36,6 +36,12 @@ func Root() *graphql.Object {
 				Resolve: resolvers.GetUserByPhoneEmail,
 				Description: "Get User By Email or Phone",
 			},
+
+			"AllPhoneCode": {
+				Type: graphql.NewList(types.GetPhoneCodeType()),
+				Resolve: resolvers.AllPhoneCode,
+				Description: "Get All Phone Code",
+			},
 		},
 	})
 

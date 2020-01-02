@@ -2,6 +2,7 @@ package models
 
 import (
 	"../connection"
+	"fmt"
 	"log"
 	"time"
 )
@@ -13,7 +14,7 @@ type User struct {
 	LastName       string `gorm:"VARCHAR(100); NOT NULL"`
 	Email          string `gorm:"VARCHAR(100); NOT NULL; UNIQUE"`
 	IsEmailConfirm int    `gorm:"INTEGER"`
-	PhoneCode      string `gorm:"VARCHAR(100); NOT NULL"`
+	PhoneCodeID    int    `gorm:"INTEGER; NOT NULL"`
 	Phone          string `gorm:"VARCHAR(100); NOT NULL"`
 	IsPhoneConfirm int    `gorm:"INTEGER"`
 	Password       string `gorm:"VARCHAR(100); NOT NULL"`
@@ -48,6 +49,7 @@ func GetAllUser() []User {
 
 	var users []User
 	database.Find(&users)
+
 	return users
 }
 
@@ -95,13 +97,18 @@ func InsertUser(firstName string, lastName string, email string, phoneCode strin
 	database := connection.GetConnection()
 	defer database.Close()
 
+	fmt.Println(phoneCode)
+
+	phoneCodeID := GetPhoneCode(phoneCode)
+	fmt.Println(phoneCodeID)
+
 	newUser := &User{
-		FirstName: firstName,
-		LastName:  lastName,
-		Email:     email,
-		PhoneCode: phoneCode,
-		Phone:     phone,
-		Password:  password,
+		FirstName:   firstName,
+		LastName:    lastName,
+		Email:       email,
+		PhoneCodeID: phoneCodeID[0].PhoneCodeID,
+		Phone:       phone,
+		Password:    password,
 	}
 	database.Save(newUser)
 
@@ -118,11 +125,11 @@ func UpdateUserProfile(id int, title string, firstName string, lastName string, 
 		Model(&user).
 		Where("id = ?", id).
 		Updates(map[string]interface{}{
-			"title":     title,
+			"title":      title,
 			"first_name": firstName,
 			"last_name":  lastName,
-			"city":      city,
-			"address":   address,
+			"city":       city,
+			"address":    address,
 			"zip_code":   zipCode,
 		})
 	database.
