@@ -2,7 +2,6 @@ package models
 
 import (
 	"../connection"
-	"fmt"
 	"log"
 	"time"
 )
@@ -117,10 +116,7 @@ func InsertUser(firstName string, lastName string, email string, phoneCode strin
 	database := connection.GetConnection()
 	defer database.Close()
 
-	fmt.Println(phoneCode)
-
 	phoneCodeID := GetPhoneCode(phoneCode)
-	fmt.Println(phoneCodeID)
 
 	newUser := &User{
 		FirstName:   firstName,

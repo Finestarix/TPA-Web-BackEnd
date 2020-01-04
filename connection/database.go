@@ -3,7 +3,6 @@ package connection
 import (
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/postgres"
-	//"github.com/lib/pq"
 	"github.com/joho/godotenv"
 	"log"
 	"os"
