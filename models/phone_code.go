@@ -7,12 +7,12 @@ import (
 )
 
 type PhoneCode struct {
-	PhoneCodeID int    `gorm:"PRIMARY_KEY"`
-	Country     string `gorm:"VARCHAR(100); NOT NULL"`
-	PhoneCode   string `gorm:"VARCHAR(100); NOT NULL"`
-	CreatedAt   time.Time
-	UpdatedAt   time.Time
-	DeletedAt   *time.Time `sql:"index"`
+	ID        int    `gorm:"PRIMARY_KEY"`
+	Country   string `gorm:"VARCHAR(100); NOT NULL"`
+	Code      string `gorm:"VARCHAR(100); NOT NULL"`
+	CreatedAt time.Time
+	UpdatedAt time.Time
+	DeletedAt *time.Time `sql:"index"`
 }
 
 func init() {
@@ -41,25 +41,25 @@ func GetAllPhoneCode() []PhoneCode {
 	return phoneCode
 }
 
-func GetPhoneCode(searchPhoneCode string) []PhoneCode {
+func GetPhoneCode(searchPhoneCode string) PhoneCode {
 	database := connection.GetConnection()
 	defer database.Close()
 
-	var phoneCode []PhoneCode
+	var phoneCode PhoneCode
 	database.
-		Where("phone_code = ?", searchPhoneCode).
-		Find(&phoneCode)
+		Where("code = ?", searchPhoneCode).
+		First(&phoneCode)
 
 	return phoneCode
 }
 
-func InsertPhoneCode(country string, phoneCode string) *PhoneCode {
+func InsertPhoneCode(country string, code string) *PhoneCode {
 	database := connection.GetConnection()
 	defer database.Close()
 
 	newPhoneCode := &PhoneCode{
-		Country:   country,
-		PhoneCode: phoneCode,
+		Country: country,
+		Code:    code,
 	}
 	database.Save(newPhoneCode)
 

@@ -7,19 +7,20 @@ import (
 )
 
 type User struct {
-	ID             int    `gorm:"PRIMARY_KEY"`
-	Title          string `gorm:"VARCHAR(100);"`
-	FirstName      string `gorm:"VARCHAR(100); NOT NULL"`
-	LastName       string `gorm:"VARCHAR(100); NOT NULL"`
-	Email          string `gorm:"VARCHAR(100); NOT NULL; UNIQUE"`
-	IsEmailConfirm int    `gorm:"INTEGER"`
-	PhoneCodeID    int    `gorm:"INTEGER; NOT NULL"`
-	Phone          string `gorm:"VARCHAR(100); NOT NULL"`
-	IsPhoneConfirm int    `gorm:"INTEGER"`
-	Password       string `gorm:"VARCHAR(100); NOT NULL"`
-	City           string `gorm:"VARCHAR(100)"`
-	Address        string `gorm:"VARCHAR(100)"`
-	ZipCode        int    `gorm:"INTEGER"`
+	ID             int       `gorm:"PRIMARY_KEY"`
+	Title          string    `gorm:"VARCHAR(100);"`
+	FirstName      string    `gorm:"VARCHAR(100); NOT NULL"`
+	LastName       string    `gorm:"VARCHAR(100); NOT NULL"`
+	Email          string    `gorm:"VARCHAR(100); NOT NULL; UNIQUE"`
+	IsEmailConfirm int       `gorm:"INTEGER"`
+	PhoneCode      PhoneCode `gorm:"foreignkey:PhoneCodeID"`
+	PhoneCodeID    int       `gorm:"INTEGER; NOT NULL"`
+	Phone          string    `gorm:"VARCHAR(100); NOT NULL"`
+	IsPhoneConfirm int       `gorm:"INTEGER"`
+	Password       string    `gorm:"VARCHAR(100); NOT NULL"`
+	City           string    `gorm:"VARCHAR(100)"`
+	Address        string    `gorm:"VARCHAR(100)"`
+	ZipCode        int       `gorm:"INTEGER"`
 	CreatedAt      time.Time
 	UpdatedAt      time.Time
 	DeletedAt      *time.Time `sql:"index"`
@@ -29,7 +30,8 @@ func init() {
 	database := connection.GetConnection()
 	defer database.Close()
 
-	database.AutoMigrate(&User{})
+	database.AutoMigrate(&User{}).AddForeignKey("phone_code_id", "phone_codes(id)", "CASCADE", "CASCADE")
+
 	log.Println("Initialize User Success")
 }
 
@@ -38,7 +40,7 @@ func DropTableUser() {
 	defer database.Close()
 
 	database.DropTableIfExists(&User{})
-	database.AutoMigrate(&User{})
+	database.AutoMigrate(&User{}).AddForeignKey("phone_code_id", "phone_codes(id)", "CASCADE", "CASCADE")
 	log.Println("Drop Database Success")
 }
 
@@ -49,65 +51,69 @@ func GetAllUser() []User {
 	var users []User
 	database.Find(&users)
 
+	for i, _ := range users {
+		database.Model(users[i]).Related(&users[i].PhoneCode, "phone_code_id")
+	}
+
 	return users
 }
 
-func GetUserByID(id int) []User {
+func GetUserByID(id int) User {
 	database := connection.GetConnection()
 	defer database.Close()
 
-	var user []User
+	var user User
 	database.
 		Where("id = ?", id).
-		Find(&user)
+		First(&user).Related(&user.PhoneCode, "phone_code_id")
 
 	return user
 }
 
-func GetUserByPhone(phone string) []User {
+func GetUserByPhone(phone string) User {
 	database := connection.GetConnection()
 	defer database.Close()
 
-	var user []User
+	var user User
 	database.
 		Where("phone = ?", phone).
-		Find(&user)
+		First(&user).Related(&user.PhoneCode, "phone_code_id")
 
 	return user
 }
 
-func GetUserByEmail(email string) []User {
+func GetUserByEmail(email string) User {
 	database := connection.GetConnection()
 	defer database.Close()
 
-	var user []User
+	var user User
 	database.
 		Where("email = ?", email).
-		Find(&user)
+		First(&user).Related(&user.PhoneCode, "phone_code_id")
 
 	return user
 }
 
-func GetUserByPhoneAndPassword(phone string, password string) []User {
+func GetUserByPhoneAndPassword(phone string, password string) User {
 	database := connection.GetConnection()
 	defer database.Close()
 
-	var user []User
+	var user User
 	database.
 		Where("phone = ? AND password = ?", phone, password).
-		Find(&user)
+		First(&user).Related(&user.PhoneCode, "phone_code_id")
 
 	return user
 }
 
-func GetUserByEmailAndPassword(email string, password string) []User {
+func GetUserByEmailAndPassword(email string, password string) User {
 	database := connection.GetConnection()
 	defer database.Close()
 
-	var user []User
+	var user User
 	database.
 		Where("email = ? AND password = ?", email, password).
-		Find(&user)
+		First(&user).Related(&user.PhoneCode, "phone_code_id")
 
 	return user
 }
@@ -122,7 +128,7 @@ func InsertUser(firstName string, lastName string, email string, phoneCode strin
 		FirstName:   firstName,
 		LastName:    lastName,
 		Email:       email,
-		PhoneCodeID: phoneCodeID[0].PhoneCodeID,
+		PhoneCodeID: phoneCodeID.ID,
 		Phone:       phone,
 		Password:    password,
 	}
@@ -160,16 +166,11 @@ func DeleteUser(id int) *User {
 	database := connection.GetConnection()
 	defer database.Close()
 
-	var users []User = GetUserByID(id)
+	var user User = GetUserByID(id)
 
-	if len(users) != 0 {
-		return nil
-	}
-
-	var user = users[0]
-	error := database.Delete(user).Error
-	if error != nil {
-		panic("Error Delete User !" + error.Error())
+	err := database.Delete(user).Error
+	if err != nil {
+		panic("Error Delete User !" + err.Error())
 	}
 
 	log.Println("Delete User Success")

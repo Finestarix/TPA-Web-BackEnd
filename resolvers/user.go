@@ -20,7 +20,7 @@ func GetUserByPhoneEmail(p graphql.ResolveParams) (i interface{}, err error) {
 	searchEmailPhone := p.Args["emailphone"].(string)
 	user := models.GetUserByEmail(searchEmailPhone)
 
-	if len(user) == 0 {
+	if &user == nil {
 		user = models.GetUserByPhone(searchEmailPhone)
 	}
 
@@ -33,7 +33,7 @@ func UserLogin(p graphql.ResolveParams) (i interface{}, err error) {
 
 	user := models.GetUserByEmailAndPassword(searchEmailPhone, searchPassword)
 
-	if len(user) == 0 {
+	if &user == nil {
 		user = models.GetUserByPhoneAndPassword(searchEmailPhone, searchPassword)
 	}
 
