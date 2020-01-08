@@ -17,7 +17,7 @@ func Root() *graphql.Object {
 				Description: "Get All Users",
 			},
 			"UserByID": {
-				Type: graphql.NewList(types.GetUserType()),
+				Type: types.GetUserType(),
 				Args: graphql.FieldConfigArgument{
 					"id": &graphql.ArgumentConfig{
 						Type: graphql.NewNonNull(graphql.Int),
@@ -27,7 +27,7 @@ func Root() *graphql.Object {
 				Description: "Get User By ID",
 			},
 			"UserByEmailAndPhone": {
-				Type: graphql.NewList(types.GetUserType()),
+				Type: types.GetUserType(),
 				Args: graphql.FieldConfigArgument{
 					"emailphone": &graphql.ArgumentConfig{
 						Type: graphql.NewNonNull(graphql.String),
@@ -56,9 +56,9 @@ func Root() *graphql.Object {
 				Description: "Get All Phone Code",
 			},
 			"GetPhoneCode": {
-				Type: graphql.NewList(types.GetPhoneCodeType()),
+				Type: types.GetPhoneCodeType(),
 				Args: graphql.FieldConfigArgument{
-					"phonecode": &graphql.ArgumentConfig{
+					"code": &graphql.ArgumentConfig{
 						Type: graphql.NewNonNull(graphql.String),
 					},
 				},

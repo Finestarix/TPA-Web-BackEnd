@@ -11,7 +11,7 @@ func AllPhoneCode(p graphql.ResolveParams) (i interface{}, err error) {
 }
 
 func GetPhoneCode(p graphql.ResolveParams) (i interface{}, err error) {
-	searchPhoneCode := p.Args["phonecode"].(string)
+	searchPhoneCode := p.Args["code"].(string)
 	phoneCode := models.GetPhoneCode(searchPhoneCode)
 	return phoneCode, nil
 }

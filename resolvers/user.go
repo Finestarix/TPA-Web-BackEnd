@@ -1,18 +1,25 @@
 package resolvers
 
 import (
-	"github.com/graphql-go/graphql"
 	"../models"
+	"errors"
+	"github.com/graphql-go/graphql"
 )
 
 func AllUsers(p graphql.ResolveParams) (i interface{}, err error) {
 	users := models.GetAllUser()
+
+	if len(users) == 0 {
+		return nil, errors.New("error: no data found")
+	}
+
 	return users, nil
 }
 
 func GetUserByID(p graphql.ResolveParams) (i interface{}, err error) {
 	searchID := p.Args["id"].(int)
 	user := models.GetUserByID(searchID)
+
 	return user, nil
 }
 
@@ -20,7 +27,7 @@ func GetUserByPhoneEmail(p graphql.ResolveParams) (i interface{}, err error) {
 	searchEmailPhone := p.Args["emailphone"].(string)
 	user := models.GetUserByEmail(searchEmailPhone)
 
-	if &user == nil {
+	if user.ID == 0 {
 		user = models.GetUserByPhone(searchEmailPhone)
 	}
 
@@ -33,7 +40,7 @@ func UserLogin(p graphql.ResolveParams) (i interface{}, err error) {
 
 	user := models.GetUserByEmailAndPassword(searchEmailPhone, searchPassword)
 
-	if &user == nil {
+	if user.ID == 0 {
 		user = models.GetUserByPhoneAndPassword(searchEmailPhone, searchPassword)
 	}
 

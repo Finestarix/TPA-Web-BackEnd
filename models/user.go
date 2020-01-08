@@ -41,6 +41,7 @@ func DropTableUser() {
 
 	database.DropTableIfExists(&User{})
 	database.AutoMigrate(&User{}).AddForeignKey("phone_code_id", "phone_codes(id)", "CASCADE", "CASCADE")
+
 	log.Println("Drop Database Success")
 }
 
@@ -65,7 +66,11 @@ func GetUserByID(id int) User {
 	var user User
 	database.
 		Where("id = ?", id).
-		First(&user).Related(&user.PhoneCode, "phone_code_id")
+		First(&user)
+
+	if user.ID != 0 {
+		database.Model(&user).Related(&user.PhoneCode, "phone_code_id")
+	}
 
 	return user
 }
@@ -77,7 +82,11 @@ func GetUserByPhone(phone string) User {
 	var user User
 	database.
 		Where("phone = ?", phone).
-		First(&user).Related(&user.PhoneCode, "phone_code_id")
+		First(&user)
+
+	if user.ID != 0 {
+		database.Model(&user).Related(&user.PhoneCode, "phone_code_id")
+	}
 
 	return user
 }
@@ -89,7 +98,11 @@ func GetUserByEmail(email string) User {
 	var user User
 	database.
 		Where("email = ?", email).
-		First(&user).Related(&user.PhoneCode, "phone_code_id")
+		First(&user)
+
+	if user.ID != 0 {
+		database.Model(&user).Related(&user.PhoneCode, "phone_code_id")
+	}
 
 	return user
 }
@@ -101,7 +114,11 @@ func GetUserByPhoneAndPassword(phone string, password string) User {
 	var user User
 	database.
 		Where("phone = ? AND password = ?", phone, password).
-		First(&user).Related(&user.PhoneCode, "phone_code_id")
+		First(&user)
+
+	if user.ID != 0 {
+		database.Model(&user).Related(&user.PhoneCode, "phone_code_id")
+	}
 
 	return user
 }
@@ -113,7 +130,11 @@ func GetUserByEmailAndPassword(email string, password string) User {
 	var user User
 	database.
 		Where("email = ? AND password = ?", email, password).
-		First(&user).Related(&user.PhoneCode, "phone_code_id")
+		First(&user)
+
+	if user.ID != 0 {
+		database.Model(&user).Related(&user.PhoneCode, "phone_code_id")
+	}
 
 	return user
 }
