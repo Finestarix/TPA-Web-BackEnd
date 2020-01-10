@@ -37,7 +37,7 @@ func Root() *graphql.Object {
 				Description: "Get User By Email or Phone",
 			},
 			"UserLogin": {
-				Type: graphql.NewList(types.GetUserType()),
+				Type: types.GetUserType(),
 				Args: graphql.FieldConfigArgument{
 					"emailphone": &graphql.ArgumentConfig{
 						Type: graphql.NewNonNull(graphql.String),

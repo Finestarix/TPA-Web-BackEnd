@@ -2,6 +2,7 @@ package models
 
 import (
 	"../connection"
+	"fmt"
 	"log"
 	"time"
 )
@@ -120,6 +121,8 @@ func GetUserByPhoneAndPassword(phone string, password string) User {
 		database.Model(&user).Related(&user.PhoneCode, "phone_code_id")
 	}
 
+	fmt.Println(user)
+
 	return user
 }
 
@@ -135,6 +138,7 @@ func GetUserByEmailAndPassword(email string, password string) User {
 	if user.ID != 0 {
 		database.Model(&user).Related(&user.PhoneCode, "phone_code_id")
 	}
+	fmt.Println(user)
 
 	return user
 }
