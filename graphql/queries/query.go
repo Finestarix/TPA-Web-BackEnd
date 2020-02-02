@@ -65,6 +65,18 @@ func Root() *graphql.Object {
 				Resolve:     resolvers.GetPhoneCode,
 				Description: "Get Phone Code",
 			},
+
+			"AllHotel": {
+				Type: graphql.NewList(types.GetHotelType()),
+				Resolve: resolvers.AllHotel,
+				Description: "Get All Hotel",
+			},
+
+			"AllLocation": {
+				Type: graphql.NewList(types.GetLocationType()),
+				Resolve: resolvers.AllLocation,
+				Description: "Get All Location",
+			},
 		},
 	})
 

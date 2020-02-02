@@ -70,6 +70,50 @@ func Root() *graphql.Object {
 				},
 				Resolve: resolvers.DeleteUser,
 			},
+
+			"InsertNewHotel": &graphql.Field{
+				Type: types.GetHotelType(),
+				Args: graphql.FieldConfigArgument{
+					"name": &graphql.ArgumentConfig{
+						Type: graphql.NewNonNull(graphql.String),
+					},
+					"address": &graphql.ArgumentConfig{
+						Type: graphql.NewNonNull(graphql.String),
+					},
+					"city": &graphql.ArgumentConfig{
+						Type: graphql.NewNonNull(graphql.String),
+					},
+					"price": &graphql.ArgumentConfig{
+						Type: graphql.NewNonNull(graphql.Int),
+					},
+					"rating": &graphql.ArgumentConfig{
+						Type: graphql.NewNonNull(graphql.Float),
+					},
+				},
+				Resolve: resolvers.InsertHotel,
+			},
+
+			"InsertNewLocation": &graphql.Field{
+				Type: types.GetLocationType(),
+				Args: graphql.FieldConfigArgument{
+					"longitude": &graphql.ArgumentConfig{
+						Type: graphql.NewNonNull(graphql.Float),
+					},
+					"latitude": &graphql.ArgumentConfig{
+						Type: graphql.NewNonNull(graphql.Float),
+					},
+					"city": &graphql.ArgumentConfig{
+						Type: graphql.NewNonNull(graphql.String),
+					},
+					"province": &graphql.ArgumentConfig{
+						Type: graphql.NewNonNull(graphql.String),
+					},
+					"region": &graphql.ArgumentConfig{
+						Type: graphql.NewNonNull(graphql.String),
+					},
+				},
+				Resolve: resolvers.InsertLocation,
+			},
 		},
 	})
 }
