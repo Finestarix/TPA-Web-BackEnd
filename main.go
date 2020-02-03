@@ -32,3 +32,12 @@ func main() {
 
 	log.Fatal(http.ListenAndServe(":4201", newHandlerSchema))
 }
+
+//func main() {
+//	var temp = models.GetNearestHotel(-6.202112409236046, 106.78171499648295)
+//	db := connection.GetConnection()
+//	for i, _ := range temp {
+//		db.Model(temp[i]).Related(&temp[i].Location, "location_id")
+//		fmt.Println(temp[i])
+//	}
+//}

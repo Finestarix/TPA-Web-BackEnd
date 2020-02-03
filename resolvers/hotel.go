@@ -19,11 +19,26 @@ func AllHotel(p graphql.ResolveParams) (i interface{}, err error) {
 func InsertHotel(p graphql.ResolveParams) (i interface{}, err error) {
 	name := p.Args["name"].(string)
 	address := p.Args["address"].(string)
-	city := p.Args["city"].(string)
+	location := p.Args["location"].(string)
 	price := p.Args["price"].(int)
 	rating := p.Args["rating"].(float64)
+	latitude := p.Args["latitude"].(float64)
+	longitude := p.Args["longitude"].(float64)
 
-	newHotel := models.InsertHotel(name, address, city, price, rating)
+	newHotel := models.InsertHotel(name, address, location, price, rating, latitude, longitude)
 
 	return newHotel, nil
+}
+
+func GetNearestHotel(p graphql.ResolveParams) (i interface{}, err error) {
+	latitude := p.Args["latitude"].(float64)
+	longitude := p.Args["longitude"].(float64)
+
+	hotels := models.GetNearestHotel(latitude, longitude)
+
+	if len(hotels) == 0 {
+		return nil, errors.New("error: no data found")
+	}
+
+	return hotels, nil
 }

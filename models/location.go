@@ -2,14 +2,15 @@ package models
 
 import (
 	"../connection"
+	"fmt"
 	"log"
 	"time"
 )
 
 type Location struct {
 	ID int  `gorm:"PRIMARY_KEY"`
-	Longitude float64  `gorm:"DECIMAL(3,1)"`
-	Latitude float64  `gorm:"DECIMAL(3,1)"`
+	Longitude float64  `gorm:"DECIMAL(13,6)"`
+	Latitude float64  `gorm:"DECIMAL(13,6)"`
 	City string `gorm:"VARCHAR(100); NOT NULL"`
 	Province string `gorm:"VARCHAR(100); NOT NULL"`
 	Region string `gorm:"VARCHAR(100); NOT NULL"`
@@ -9045,10 +9046,13 @@ func GetLocationByCity(city string) Location {
 	database := connection.GetConnection()
 	defer database.Close()
 
+	fmt.Println(city)
 	var location Location
 	database.
 		Where("city = ?", city).
 		First(&location)
+
+	fmt.Println(location)
 
 	return location
 }

@@ -80,13 +80,19 @@ func Root() *graphql.Object {
 					"address": &graphql.ArgumentConfig{
 						Type: graphql.NewNonNull(graphql.String),
 					},
-					"city": &graphql.ArgumentConfig{
+					"location": &graphql.ArgumentConfig{
 						Type: graphql.NewNonNull(graphql.String),
 					},
 					"price": &graphql.ArgumentConfig{
 						Type: graphql.NewNonNull(graphql.Int),
 					},
 					"rating": &graphql.ArgumentConfig{
+						Type: graphql.NewNonNull(graphql.Float),
+					},
+					"longitude": &graphql.ArgumentConfig{
+						Type: graphql.NewNonNull(graphql.Float),
+					},
+					"latitude": &graphql.ArgumentConfig{
 						Type: graphql.NewNonNull(graphql.Float),
 					},
 				},

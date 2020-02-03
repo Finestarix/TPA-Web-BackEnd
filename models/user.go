@@ -13,7 +13,7 @@ type User struct {
 	LastName       string    `gorm:"VARCHAR(100); NOT NULL"`
 	Email          string    `gorm:"VARCHAR(100); NOT NULL; UNIQUE"`
 	IsEmailConfirm int       `gorm:"INTEGER"`
-	PhoneCode      PhoneCode `gorm:"foreignkey:PhoneCodeID"`
+	PhoneCode      PhoneCode `gorm:"FOREIGNKEY:PhoneCodeID"`
 	PhoneCodeID    int       `gorm:"INTEGER; NOT NULL"`
 	Phone          string    `gorm:"VARCHAR(100); NOT NULL"`
 	IsPhoneConfirm int       `gorm:"INTEGER"`

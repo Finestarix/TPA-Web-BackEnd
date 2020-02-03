@@ -18,8 +18,17 @@ func GetHotelType() *graphql.Object {
 				"address": &graphql.Field{
 					Type: graphql.String,
 				},
-				"city": &graphql.Field{
-					Type: graphql.String,
+				"location": &graphql.Field{
+					Type: GetLocationType(),
+				},
+				"locationid": &graphql.Field{
+					Type: graphql.Int,
+				},
+				"latitude": &graphql.Field{
+					Type: graphql.Float,
+				},
+				"longitude": &graphql.Field{
+					Type: graphql.Float,
 				},
 				"price": &graphql.Field{
 					Type: graphql.Int,
