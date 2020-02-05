@@ -8,26 +8,28 @@ import (
 )
 
 type Hotel struct {
-	ID         int      `gorm:"PRIMARY_KEY"`
-	Name       string   `gorm:"VARCHAR(100); NOT NULL"`
-	Address    string   `gorm:"VARCHAR(100); NOT NULL"`
-	Location   Location `grom:"FOREIGNKEY:LocationID"`
-	LocationID int      `gorm:"INTEGER; NOT NULL"`
-	Longitude  float64  `gorm:"DECIMAL(3,1)"`
-	Latitude   float64  `gorm:"DECIMAL(3,1)"`
-	//Photo []string
-	Price     int     `gorm:"INTEGER; NOT NULL"`
-	Rating    float64 `gorm:"DECIMAL(3,1)"`
-	CreatedAt time.Time
-	UpdatedAt time.Time
-	DeletedAt *time.Time `sql:"index"`
+	ID         int            `gorm:"PRIMARY_KEY"`
+	Name       string         `gorm:"VARCHAR(100); NOT NULL"`
+	Address    string         `gorm:"VARCHAR(100); NOT NULL"`
+	Location   Location       `gorm:"FOREIGNKEY:LocationID"`
+	LocationID int            `gorm:"INTEGER; NOT NULL"`
+	Longitude  float64        `gorm:"DECIMAL(3,1)"`
+	Latitude   float64        `gorm:"DECIMAL(3,1)"`
+	Photo      []HotelImage   `gorm:"FOREIGNKEY:HotelID"`
+	Price      int            `gorm:"INTEGER; NOT NULL"`
+	Rating     float64        `gorm:"DECIMAL(3,1)"`
+	CreatedAt  time.Time
+	UpdatedAt  time.Time
+	DeletedAt  *time.Time `sql:"index"`
 }
 
 func init() {
 	database := connection.GetConnection()
 	defer database.Close()
 
-	database.AutoMigrate(&Hotel{}).AddForeignKey("location_id", "locations(id)", "CASCADE", "CASCADE")
+	database.
+		AutoMigrate(&Hotel{}).
+		AddForeignKey("location_id", "locations(id)", "CASCADE", "CASCADE")
 
 	log.Println("Initialize Hotel Success")
 }
@@ -47,7 +49,7 @@ func GetAllHotel() []Hotel {
 	defer database.Close()
 
 	var hotels []Hotel
-	database.Find(&hotels)
+	database.Preload("Photo").Find(&hotels)
 
 	for i, _ := range hotels {
 		database.Model(hotels[i]).Related(&hotels[i].Location, "location_id")
@@ -98,8 +100,8 @@ func distance(currLatitude float64, currLongitude float64, searchLatitude float6
 	theta := float64(currLongitude - searchLongitude)
 	radianTheta := float64(PI * theta / 180)
 
-	distance := math.Sin(radianLatitude1) * math.Sin(radianLatitude2) +
-			math.Cos(radianLatitude1) * math.Cos(radianLatitude2) *
+	distance := math.Sin(radianLatitude1)*math.Sin(radianLatitude2) +
+		math.Cos(radianLatitude1)*math.Cos(radianLatitude2)*
 			math.Cos(radianTheta)
 
 	if distance > 1 {
@@ -130,7 +132,7 @@ func bubbleSort(currLatitude float64, currLongitude float64, hotels []Hotel) {
 	size := len(hotels)
 
 	for i := 0; i < size; i++ {
-		for j := size - 1; j >= i + 1; j-- {
+		for j := size - 1; j >= i+1; j-- {
 			if compareDistance(currLatitude, currLongitude, hotels[j], hotels[j-1]) {
 				hotels[j], hotels[j-1] = hotels[j-1], hotels[j]
 			}
@@ -150,6 +152,7 @@ func GetNearestHotel(currLatitude float64, currLongitude float64) []Hotel {
 	db.Find(&hotels)
 	for i, _ := range hotels {
 		db.Model(hotels[i]).Related(&hotels[i].Location, "location_id")
+		db.Model(hotels[i]).Related(&hotels[i].Photo, "hotel_id")
 	}
 
 	//fmt.Println("Before: ")

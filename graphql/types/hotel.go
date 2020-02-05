@@ -24,6 +24,9 @@ func GetHotelType() *graphql.Object {
 				"locationid": &graphql.Field{
 					Type: graphql.Int,
 				},
+				"photo": {
+					Type: graphql.NewList(GetHotelImageType()),
+				},
 				"latitude": &graphql.Field{
 					Type: graphql.Float,
 				},

@@ -17,13 +17,11 @@ func AllLocation(p graphql.ResolveParams) (i interface{}, err error) {
 }
 
 func InsertLocation(p graphql.ResolveParams) (i interface{}, err error) {
-	longitude := p.Args["longitude"].(float64)
-	latitude := p.Args["city"].(float64)
 	city := p.Args["province"].(string)
 	province := p.Args["region"].(string)
 	region := p.Args["region"].(string)
 
-	newLocation := models.InsertLocation(city, province, region, longitude, latitude)
+	newLocation := models.InsertLocation(city, province, region)
 
 	return newLocation, nil
 }

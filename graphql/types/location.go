@@ -12,12 +12,6 @@ func GetLocationType() *graphql.Object {
 				"id": &graphql.Field{
 					Type: graphql.Int,
 				},
-				"longitude": &graphql.Field{
-					Type: graphql.Float,
-				},
-				"latitude": &graphql.Field{
-					Type: graphql.Float,
-				},
 				"city": &graphql.Field{
 					Type: graphql.String,
 				},

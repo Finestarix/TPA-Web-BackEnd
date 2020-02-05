@@ -102,12 +102,6 @@ func Root() *graphql.Object {
 			"InsertNewLocation": &graphql.Field{
 				Type: types.GetLocationType(),
 				Args: graphql.FieldConfigArgument{
-					"longitude": &graphql.ArgumentConfig{
-						Type: graphql.NewNonNull(graphql.Float),
-					},
-					"latitude": &graphql.ArgumentConfig{
-						Type: graphql.NewNonNull(graphql.Float),
-					},
 					"city": &graphql.ArgumentConfig{
 						Type: graphql.NewNonNull(graphql.String),
 					},
@@ -119,6 +113,19 @@ func Root() *graphql.Object {
 					},
 				},
 				Resolve: resolvers.InsertLocation,
+			},
+
+			"InsertHotelImage": &graphql.Field{
+				Type: types.GetHotelImageType(),
+				Args: graphql.FieldConfigArgument{
+					"hotelid": &graphql.ArgumentConfig{
+						Type: graphql.NewNonNull(graphql.Int),
+					},
+					"source": &graphql.ArgumentConfig{
+						Type: graphql.NewNonNull(graphql.String),
+					},
+				},
+				Resolve: resolvers.InsertHotelImage,
 			},
 		},
 	})

@@ -90,6 +90,12 @@ func Root() *graphql.Object {
 				Resolve: resolvers.AllLocation,
 				Description: "Get All Location",
 			},
+
+			"AllHotelImage": {
+				Type: graphql.NewList(types.GetHotelImageType()),
+				Resolve: resolvers.AllHotelImage,
+				Description: "Get All Hotel Image",
+			},
 		},
 	})
 
