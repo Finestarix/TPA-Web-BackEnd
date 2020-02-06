@@ -12,6 +12,7 @@ type User struct {
 	FirstName      string    `gorm:"VARCHAR(100); NOT NULL"`
 	LastName       string    `gorm:"VARCHAR(100); NOT NULL"`
 	Email          string    `gorm:"VARCHAR(100); NOT NULL; UNIQUE"`
+	Image 		   string 	 `gorm:"VARCHAR(100)"`
 	IsEmailConfirm int       `gorm:"INTEGER"`
 	PhoneCode      PhoneCode `gorm:"FOREIGNKEY:PhoneCodeID"`
 	PhoneCodeID    int       `gorm:"INTEGER; NOT NULL"`
@@ -142,11 +143,15 @@ func GetUserByEmailAndPassword(email string, password string) User {
 	return user
 }
 
-func InsertUser(firstName string, lastName string, email string, phoneCode string, phone string, password string) *User {
+func InsertUser(firstName string, lastName string, email string, phoneCode string, phone string, password string, image string) *User {
 	database := connection.GetConnection()
 	defer database.Close()
 
 	phoneCodeID := GetPhoneCode(phoneCode)
+
+	if image == "" {
+		image = "Icon_Default.png";
+	}
 
 	newUser := &User{
 		FirstName:   firstName,
@@ -155,6 +160,7 @@ func InsertUser(firstName string, lastName string, email string, phoneCode strin
 		PhoneCodeID: phoneCodeID.ID,
 		Phone:       phone,
 		Password:    password,
+		Image:  	 image,
 	}
 	database.Save(newUser)
 

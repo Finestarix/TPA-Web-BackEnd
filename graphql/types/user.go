@@ -27,6 +27,9 @@ func GetUserType() *graphql.Object {
 				"isemailconfirm": &graphql.Field{
 					Type: graphql.Int,
 				},
+				"image": &graphql.Field{
+					Type: graphql.String,
+				},
 				"phonecode": &graphql.Field{
 					Type: GetPhoneCodeType(),
 				},

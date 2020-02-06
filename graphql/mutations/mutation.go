@@ -31,6 +31,9 @@ func Root() *graphql.Object {
 					"password": &graphql.ArgumentConfig{
 						Type: graphql.NewNonNull(graphql.String),
 					},
+					"image": &graphql.ArgumentConfig{
+						Type: graphql.NewNonNull(graphql.String),
+					},
 				},
 				Resolve: resolvers.InsertUser,
 			},

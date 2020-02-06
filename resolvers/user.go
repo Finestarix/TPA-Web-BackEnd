@@ -54,8 +54,9 @@ func InsertUser(p graphql.ResolveParams) (i interface{}, err error) {
 	phonecode := p.Args["phonecode"].(string)
 	phone := p.Args["phone"].(string)
 	password := p.Args["password"].(string)
+	image := p.Args["image"].(string)
 
-	newUser := models.InsertUser(firstname, lastname, email, phonecode, phone, password)
+	newUser := models.InsertUser(firstname, lastname, email, phonecode, phone, password, image)
 
 	return newUser, nil
 }
