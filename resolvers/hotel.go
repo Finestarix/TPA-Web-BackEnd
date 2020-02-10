@@ -42,3 +42,15 @@ func GetNearestHotel(p graphql.ResolveParams) (i interface{}, err error) {
 
 	return hotels, nil
 }
+
+func GetHotelByCity(p graphql.ResolveParams) (i interface{}, err error) {
+	city := p.Args["city"].(string)
+
+	hotels := models.GetHotelByCity(city)
+
+	if len(hotels) == 0 {
+		return nil, errors.New("error: no data found")
+	}
+
+	return hotels, nil
+}

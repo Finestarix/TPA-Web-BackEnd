@@ -130,6 +130,19 @@ func Root() *graphql.Object {
 				},
 				Resolve: resolvers.InsertHotelImage,
 			},
+
+			"InsertHotelFacility": &graphql.Field{
+				Type: types.GetHotelFacilityType(),
+				Args: graphql.FieldConfigArgument{
+					"hotelid": &graphql.ArgumentConfig{
+						Type: graphql.NewNonNull(graphql.Int),
+					},
+					"name": &graphql.ArgumentConfig{
+						Type: graphql.NewNonNull(graphql.String),
+					},
+				},
+				Resolve: resolvers.InsertHotelFacility,
+			},
 		},
 	})
 }

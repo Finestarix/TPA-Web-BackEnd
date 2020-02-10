@@ -16,6 +16,7 @@ type Hotel struct {
 	Longitude  float64        `gorm:"DECIMAL(3,1)"`
 	Latitude   float64        `gorm:"DECIMAL(3,1)"`
 	Photo      []HotelImage   `gorm:"FOREIGNKEY:HotelID"`
+	Facility   []HotelFacility `gorm:FOREIGNKEY:HotelID`
 	Price      int            `gorm:"INTEGER; NOT NULL"`
 	Rating     float64        `gorm:"DECIMAL(3,1)"`
 	CreatedAt  time.Time
@@ -49,10 +50,12 @@ func GetAllHotel() []Hotel {
 	defer database.Close()
 
 	var hotels []Hotel
-	database.Preload("Photo").Find(&hotels)
+	database.Find(&hotels)
 
 	for i, _ := range hotels {
 		database.Model(hotels[i]).Related(&hotels[i].Location, "location_id")
+		database.Model(hotels[i]).Related(&hotels[i].Photo, "HotelID")
+		database.Model(hotels[i]).Related(&hotels[i].Facility, "HotelID")
 	}
 
 	return hotels
@@ -152,7 +155,8 @@ func GetNearestHotel(currLatitude float64, currLongitude float64) []Hotel {
 	db.Find(&hotels)
 	for i, _ := range hotels {
 		db.Model(hotels[i]).Related(&hotels[i].Location, "location_id")
-		db.Model(hotels[i]).Related(&hotels[i].Photo, "hotel_id")
+		db.Model(hotels[i]).Related(&hotels[i].Photo, "HotelID")
+		db.Model(hotels[i]).Related(&hotels[i].Facility, "HotelID")
 	}
 
 	//fmt.Println("Before: ")
@@ -168,6 +172,26 @@ func GetNearestHotel(currLatitude float64, currLongitude float64) []Hotel {
 	//}
 
 	hotels = hotels[0:8]
+
+	return hotels
+}
+
+func GetHotelByCity(city string) []Hotel {
+	database := connection.GetConnection()
+	defer database.Close()
+
+	location := GetLocationByCity(city)
+
+	var hotels []Hotel
+	database.
+		Where("location_id = ?", location.ID).
+		Find(&hotels)
+
+	for i, _ := range hotels {
+		database.Model(hotels[i]).Related(&hotels[i].Location, "location_id")
+		database.Model(hotels[i]).Related(&hotels[i].Photo, "HotelID")
+		database.Model(hotels[i]).Related(&hotels[i].Facility, "HotelID")
+	}
 
 	return hotels
 }

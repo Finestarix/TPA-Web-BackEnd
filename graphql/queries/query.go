@@ -84,6 +84,16 @@ func Root() *graphql.Object {
 				Resolve: resolvers.GetNearestHotel,
 				Description: "Get Nearest Hotel",
 			},
+			"GetHotelByLocation": {
+				Type: graphql.NewList(types.GetHotelType()),
+				Args: graphql.FieldConfigArgument{
+					"city": &graphql.ArgumentConfig{
+						Type: graphql.NewNonNull(graphql.String),
+					},
+				},
+				Resolve: resolvers.GetHotelByCity,
+				Description: "Get Hotel By City",
+			},
 
 			"AllLocation": {
 				Type: graphql.NewList(types.GetLocationType()),
@@ -95,6 +105,12 @@ func Root() *graphql.Object {
 				Type: graphql.NewList(types.GetHotelImageType()),
 				Resolve: resolvers.AllHotelImage,
 				Description: "Get All Hotel Image",
+			},
+
+			"AllHotelFacility": {
+				Type: graphql.NewList(types.GetHotelFacilityType()),
+				Resolve: resolvers.AllHotelFacility,
+				Description: "Get All Hotel Facility",
 			},
 		},
 	})
