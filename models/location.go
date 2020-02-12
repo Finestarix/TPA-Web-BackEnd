@@ -2,7 +2,6 @@ package models
 
 import (
 	"../connection"
-	"fmt"
 	"log"
 	"time"
 )
@@ -542,13 +541,22 @@ func GetLocationByCity(city string) Location {
 	database := connection.GetConnection()
 	defer database.Close()
 
-	fmt.Println(city)
 	var location Location
 	database.
 		Where("city = ?", city).
 		First(&location)
 
-	fmt.Println(location)
+	return location
+}
+
+func GetLocationByProvince(province string) []Location {
+	database := connection.GetConnection()
+	defer database.Close()
+
+	var location []Location
+	database.
+		Where("province = ?", province).
+		Find(&location)
 
 	return location
 }

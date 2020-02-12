@@ -176,6 +176,33 @@ func GetNearestHotel(currLatitude float64, currLongitude float64) []Hotel {
 	return hotels
 }
 
+func GetHotelByProvince(province string) []Hotel {
+	database := connection.GetConnection()
+	defer database.Close()
+
+	location := GetLocationByProvince(province)
+
+	var hotels []Hotel
+
+	if len(location) == 1 {
+		database.Where("location_id = ?", location[0].ID).Find(&hotels)
+	} else {
+		var listLocationID []int
+		for i := 0 ; i < len(location) ; i++ {
+			listLocationID = append(listLocationID, location[i].ID)
+		}
+		database.Where("location_id IN (?)", listLocationID).Find(&hotels)
+	}
+
+	for i, _ := range hotels {
+		database.Model(hotels[i]).Related(&hotels[i].Location, "location_id")
+		database.Model(hotels[i]).Related(&hotels[i].Photo, "HotelID")
+		database.Model(hotels[i]).Related(&hotels[i].Facility, "HotelID")
+	}
+
+	return hotels
+}
+
 func GetHotelByCity(city string) []Hotel {
 	database := connection.GetConnection()
 	defer database.Close()

@@ -54,3 +54,15 @@ func GetHotelByCity(p graphql.ResolveParams) (i interface{}, err error) {
 
 	return hotels, nil
 }
+
+func GetHotelByProvince(p graphql.ResolveParams) (i interface{}, err error) {
+	province := p.Args["province"].(string)
+
+	hotels := models.GetHotelByProvince(province)
+
+	if len(hotels) == 0 {
+		return nil, errors.New("error: no data found")
+	}
+
+	return hotels, nil
+}

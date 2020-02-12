@@ -25,3 +25,15 @@ func InsertLocation(p graphql.ResolveParams) (i interface{}, err error) {
 
 	return newLocation, nil
 }
+
+func GetCityByProvince(p graphql.ResolveParams) (i interface{}, err error) {
+	province := p.Args["province"].(string)
+
+	locations := models.GetLocationByProvince(province)
+
+	if len(locations) == 0 {
+		return nil, errors.New("error: no data found")
+	}
+
+	return locations, nil
+}
