@@ -203,22 +203,19 @@ func GetHotelByProvince(province string) []Hotel {
 	return hotels
 }
 
-func GetHotelByCity(city string) []Hotel {
+func GetHotelByLatLong(latitude float64, longitude float64) Hotel {
 	database := connection.GetConnection()
 	defer database.Close()
 
-	location := GetLocationByCity(city)
-
-	var hotels []Hotel
+	var hotel Hotel
 	database.
-		Where("location_id = ?", location.ID).
-		Find(&hotels)
+		Where("latitude = ?", latitude).
+		Where("longitude = ?", longitude).
+		First(&hotel)
 
-	for i, _ := range hotels {
-		database.Model(hotels[i]).Related(&hotels[i].Location, "location_id")
-		database.Model(hotels[i]).Related(&hotels[i].Photo, "HotelID")
-		database.Model(hotels[i]).Related(&hotels[i].Facility, "HotelID")
-	}
+	database.Model(hotel).Related(&hotel.Location, "location_id")
+	database.Model(hotel).Related(&hotel.Photo, "HotelID")
+	database.Model(hotel).Related(&hotel.Facility, "HotelID")
 
-	return hotels
+	return hotel
 }

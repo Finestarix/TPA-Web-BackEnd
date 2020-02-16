@@ -94,6 +94,19 @@ func Root() *graphql.Object {
 				Resolve: resolvers.GetHotelByProvince,
 				Description: "Get Hotel By Province",
 			},
+			"GetHotelByLatLong": {
+				Type: types.GetHotelType(),
+				Args: graphql.FieldConfigArgument{
+					"latitude": &graphql.ArgumentConfig{
+						Type: graphql.NewNonNull(graphql.Float),
+					},
+					"longitude": &graphql.ArgumentConfig{
+						Type: graphql.NewNonNull(graphql.Float),
+					},
+				},
+				Resolve: resolvers.GetHotelByLatLong,
+				Description: "Get Hotel By Latitude and Longitude",
+			},
 
 			"AllLocation": {
 				Type: graphql.NewList(types.GetLocationType()),
