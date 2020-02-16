@@ -11,6 +11,12 @@ func Root() *graphql.Object {
 	return graphql.NewObject(graphql.ObjectConfig{
 		Name: "Query",
 		Fields: graphql.Fields{
+			"SendSubscriptionToAll": {
+				Type:        types.GetSubscriptionType(),
+				Resolve:     resolvers.SendSubscriptionToAll,
+				Description: "Send Subscription",
+			},
+
 			"AllUser": {
 				Type:        graphql.NewList(types.GetUserType()),
 				Resolve:     resolvers.AllUsers,
@@ -67,8 +73,8 @@ func Root() *graphql.Object {
 			},
 
 			"AllHotel": {
-				Type: graphql.NewList(types.GetHotelType()),
-				Resolve: resolvers.AllHotel,
+				Type:        graphql.NewList(types.GetHotelType()),
+				Resolve:     resolvers.AllHotel,
 				Description: "Get All Hotel",
 			},
 			"NearestHotel": {
@@ -81,7 +87,7 @@ func Root() *graphql.Object {
 						Type: graphql.NewNonNull(graphql.Float),
 					},
 				},
-				Resolve: resolvers.GetNearestHotel,
+				Resolve:     resolvers.GetNearestHotel,
 				Description: "Get Nearest Hotel",
 			},
 			"GetHotelByLocation": {
@@ -91,7 +97,7 @@ func Root() *graphql.Object {
 						Type: graphql.NewNonNull(graphql.String),
 					},
 				},
-				Resolve: resolvers.GetHotelByProvince,
+				Resolve:     resolvers.GetHotelByProvince,
 				Description: "Get Hotel By Province",
 			},
 			"GetHotelByLatLong": {
@@ -104,13 +110,13 @@ func Root() *graphql.Object {
 						Type: graphql.NewNonNull(graphql.Float),
 					},
 				},
-				Resolve: resolvers.GetHotelByLatLong,
+				Resolve:     resolvers.GetHotelByLatLong,
 				Description: "Get Hotel By Latitude and Longitude",
 			},
 
 			"AllLocation": {
-				Type: graphql.NewList(types.GetLocationType()),
-				Resolve: resolvers.AllLocation,
+				Type:        graphql.NewList(types.GetLocationType()),
+				Resolve:     resolvers.AllLocation,
 				Description: "Get All Location",
 			},
 			"GetCityByProvince": {
@@ -120,19 +126,19 @@ func Root() *graphql.Object {
 						Type: graphql.NewNonNull(graphql.String),
 					},
 				},
-				Resolve: resolvers.GetCityByProvince,
+				Resolve:     resolvers.GetCityByProvince,
 				Description: "Get Location with Province",
 			},
 
 			"AllHotelImage": {
-				Type: graphql.NewList(types.GetHotelImageType()),
-				Resolve: resolvers.AllHotelImage,
+				Type:        graphql.NewList(types.GetHotelImageType()),
+				Resolve:     resolvers.AllHotelImage,
 				Description: "Get All Hotel Image",
 			},
 
 			"AllHotelFacility": {
-				Type: graphql.NewList(types.GetHotelFacilityType()),
-				Resolve: resolvers.AllHotelFacility,
+				Type:        graphql.NewList(types.GetHotelFacilityType()),
+				Resolve:     resolvers.AllHotelFacility,
 				Description: "Get All Hotel Facility",
 			},
 		},

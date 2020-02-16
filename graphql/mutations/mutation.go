@@ -10,6 +10,16 @@ func Root() *graphql.Object {
 	return graphql.NewObject(graphql.ObjectConfig{
 		Name: "Mutation",
 		Fields: graphql.Fields{
+			"InsertNewSubscription": &graphql.Field{
+				Type: types.GetSubscriptionType(),
+				Args: graphql.FieldConfigArgument{
+					"email": &graphql.ArgumentConfig{
+						Type: graphql.NewNonNull(graphql.String),
+					},
+				},
+				Resolve: resolvers.InsertSubscription,
+			},
+
 			"InsertNewUser": &graphql.Field{
 				Type: types.GetUserType(),
 				Args: graphql.FieldConfigArgument{
