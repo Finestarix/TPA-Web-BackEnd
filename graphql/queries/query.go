@@ -113,6 +113,16 @@ func Root() *graphql.Object {
 				Resolve:     resolvers.GetHotelByLatLong,
 				Description: "Get Hotel By Latitude and Longitude",
 			},
+			"GetHotelByID": {
+				Type: types.GetHotelType(),
+				Args: graphql.FieldConfigArgument{
+					"id": &graphql.ArgumentConfig{
+						Type: graphql.NewNonNull(graphql.Int),
+					},
+				},
+				Resolve:     resolvers.GetHotelByID,
+				Description: "Get Hotel By ID",
+			},
 
 			"AllLocation": {
 				Type:        graphql.NewList(types.GetLocationType()),
@@ -140,6 +150,28 @@ func Root() *graphql.Object {
 				Type:        graphql.NewList(types.GetHotelFacilityType()),
 				Resolve:     resolvers.AllHotelFacility,
 				Description: "Get All Hotel Facility",
+			},
+
+			"AllCarModel": {
+				Type:        graphql.NewList(types.GetCarModelType()),
+				Resolve:     resolvers.AllCarModel,
+				Description: "Get All Car Model",
+			},
+
+			"AllCar": {
+				Type:        graphql.NewList(types.GetCarType()),
+				Resolve:     resolvers.AllCar,
+				Description: "Get All Car",
+			},
+			"GetCarByCity": {
+				Type: graphql.NewList(types.GetCarType()),
+				Args: graphql.FieldConfigArgument{
+					"city": &graphql.ArgumentConfig{
+						Type: graphql.NewNonNull(graphql.String),
+					},
+				},
+				Resolve:     resolvers.GetCarByCity,
+				Description: "Get Car with City",
 			},
 		},
 	})

@@ -153,6 +153,44 @@ func Root() *graphql.Object {
 				},
 				Resolve: resolvers.InsertHotelFacility,
 			},
+
+			"InsertNewCarModel": &graphql.Field{
+				Type: types.GetCarModelType(),
+				Args: graphql.FieldConfigArgument{
+					"brand": &graphql.ArgumentConfig{
+						Type: graphql.NewNonNull(graphql.String),
+					},
+					"model": &graphql.ArgumentConfig{
+						Type: graphql.NewNonNull(graphql.String),
+					},
+					"passenger": &graphql.ArgumentConfig{
+						Type: graphql.NewNonNull(graphql.Int),
+					},
+					"baggage": &graphql.ArgumentConfig{
+						Type: graphql.NewNonNull(graphql.Int),
+					},
+					"image": &graphql.ArgumentConfig{
+						Type: graphql.NewNonNull(graphql.String),
+					},
+				},
+				Resolve: resolvers.InsertCarModel,
+			},
+
+			"InsertNewCar": &graphql.Field{
+				Type: types.GetCarType(),
+				Args: graphql.FieldConfigArgument{
+					"location": &graphql.ArgumentConfig{
+						Type: graphql.NewNonNull(graphql.String),
+					},
+					"model": &graphql.ArgumentConfig{
+						Type: graphql.NewNonNull(graphql.String),
+					},
+					"price": &graphql.ArgumentConfig{
+						Type: graphql.NewNonNull(graphql.Int),
+					},
+				},
+				Resolve: resolvers.InsertCar,
+			},
 		},
 	})
 }

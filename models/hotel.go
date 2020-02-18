@@ -70,6 +70,10 @@ func GetHotelByID(id int) Hotel {
 		Where("id = ?", id).
 		First(&hotel)
 
+	database.Model(hotel).Related(&hotel.Location, "location_id")
+	database.Model(hotel).Related(&hotel.Photo, "HotelID")
+	database.Model(hotel).Related(&hotel.Facility, "HotelID")
+
 	return hotel
 }
 

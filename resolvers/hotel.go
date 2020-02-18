@@ -30,6 +30,14 @@ func InsertHotel(p graphql.ResolveParams) (i interface{}, err error) {
 	return newHotel, nil
 }
 
+func GetHotelByID(p graphql.ResolveParams) (i interface{}, err error) {
+	id := p.Args["id"].(int)
+
+	hotels := models.GetHotelByID(id)
+
+	return hotels, nil
+}
+
 func GetNearestHotel(p graphql.ResolveParams) (i interface{}, err error) {
 	latitude := p.Args["latitude"].(float64)
 	longitude := p.Args["longitude"].(float64)
