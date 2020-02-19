@@ -15,6 +15,9 @@ func GetCarType() *graphql.Object {
 				"location": &graphql.Field{
 					Type: GetLocationType(),
 				},
+				"price": &graphql.Field{
+					Type: graphql.Int,
+				},
 				"carModel": &graphql.Field{
 					Type: GetCarModelType(),
 				},

@@ -59,12 +59,19 @@ func GetCarByLocation(city string) []Car {
 	database := connection.GetConnection()
 	defer database.Close()
 
-	location := GetLocationByCity(city)
+	location := GetLocationByProvince(city)
 
 	var cars []Car
-	database.
-		Where("location_id = ?", location.ID).
-		Find(&cars)
+
+	if len(location) == 1 {
+		database.Where("location_id = ?", location[0].ID).Find(&cars)
+	} else {
+		var listLocationID []int
+		for i := 0 ; i < len(location) ; i++ {
+			listLocationID = append(listLocationID, location[i].ID)
+		}
+		database.Where("location_id IN (?)", listLocationID).Find(&cars)
+	}
 
 	for i, _ := range cars {
 		database.Model(&cars[i]).Related(&cars[i].Location, "location_id")
