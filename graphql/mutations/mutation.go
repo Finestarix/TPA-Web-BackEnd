@@ -20,6 +20,19 @@ func Root() *graphql.Object {
 				Resolve: resolvers.InsertSubscription,
 			},
 
+			"InsertNewAdmin": &graphql.Field{
+				Type: types.GetAdminType(),
+				Args: graphql.FieldConfigArgument{
+					"username": &graphql.ArgumentConfig{
+						Type: graphql.NewNonNull(graphql.String),
+					},
+					"password": &graphql.ArgumentConfig{
+						Type: graphql.NewNonNull(graphql.String),
+					},
+				},
+				Resolve: resolvers.InsertAdmin,
+			},
+
 			"InsertNewUser": &graphql.Field{
 				Type: types.GetUserType(),
 				Args: graphql.FieldConfigArgument{

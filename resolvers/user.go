@@ -3,7 +3,6 @@ package resolvers
 import (
 	"../models"
 	"errors"
-	"fmt"
 	"github.com/graphql-go/graphql"
 )
 
@@ -44,8 +43,11 @@ func UserLogin(p graphql.ResolveParams) (i interface{}, err error) {
 	if user.ID == 0 {
 		user = models.GetUserByPhoneAndPassword(searchEmailPhone, searchPassword)
 	}
-	jwtToken := models.CreateNewJWTToken(user)
-	fmt.Println(jwtToken.JwtToken)
+	jwtToken := models.CreateNewJWTTokenUser(user)
+
+	if user.ID == 0 {
+		jwtToken.JwtToken = "";
+	}
 
 	return jwtToken, nil
 }

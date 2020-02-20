@@ -17,6 +17,25 @@ func Root() *graphql.Object {
 				Description: "Send Subscription",
 			},
 
+			"AllAdmin": {
+				Type:        graphql.NewList(types.GetAdminType()),
+				Resolve:     resolvers.AllAdmin,
+				Description: "Get All Admins",
+			},
+			"AdminLogin": {
+				Type: types.GetJWTType(),
+				Args: graphql.FieldConfigArgument{
+					"email": &graphql.ArgumentConfig{
+						Type: graphql.NewNonNull(graphql.String),
+					},
+					"password": &graphql.ArgumentConfig{
+						Type: graphql.NewNonNull(graphql.String),
+					},
+				},
+				Resolve:     resolvers.LoginAdmin,
+				Description: "Admin Login (Email, Password)",
+			},
+
 			"AllUser": {
 				Type:        graphql.NewList(types.GetUserType()),
 				Resolve:     resolvers.AllUsers,
