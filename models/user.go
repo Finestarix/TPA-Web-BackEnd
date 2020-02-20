@@ -2,6 +2,7 @@ package models
 
 import (
 	"../connection"
+	"github.com/dgrijalva/jwt-go"
 	"log"
 	"time"
 )
@@ -60,13 +61,20 @@ func GetAllUser() []User {
 	return users
 }
 
-func GetUserByID(id int) User {
+func GetUserByID(id string) User {
 	database := connection.GetConnection()
 	defer database.Close()
 
+	claims := jwt.MapClaims{}
+	_ , _ = jwt.ParseWithClaims(id, claims, func(token *jwt.Token) (interface{}, error) {
+		return []byte("Admin Authentication"), nil
+	})
+
+	searchID := claims["id"]
+
 	var user User
 	database.
-		Where("id = ?", id).
+		Where("id = ?", searchID).
 		First(&user)
 
 	if user.ID != 0 {
@@ -196,13 +204,14 @@ func DeleteUser(id int) *User {
 	database := connection.GetConnection()
 	defer database.Close()
 
-	var user User = GetUserByID(id)
-
-	err := database.Delete(user).Error
-	if err != nil {
-		panic("Error Delete User !" + err.Error())
-	}
-
-	log.Println("Delete User Success")
-	return &user
+	//var user User = GetUserByID(id)
+	//
+	//err := database.Delete(user).Error
+	//if err != nil {
+	//	panic("Error Delete User !" + err.Error())
+	//}
+	//
+	//log.Println("Delete User Success")
+	//return &user
+	return nil
 }

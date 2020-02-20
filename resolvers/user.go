@@ -3,6 +3,7 @@ package resolvers
 import (
 	"../models"
 	"errors"
+	"fmt"
 	"github.com/graphql-go/graphql"
 )
 
@@ -17,7 +18,7 @@ func AllUsers(p graphql.ResolveParams) (i interface{}, err error) {
 }
 
 func GetUserByID(p graphql.ResolveParams) (i interface{}, err error) {
-	searchID := p.Args["id"].(int)
+	searchID := p.Args["id"].(string)
 	user := models.GetUserByID(searchID)
 
 	return user, nil
@@ -43,8 +44,10 @@ func UserLogin(p graphql.ResolveParams) (i interface{}, err error) {
 	if user.ID == 0 {
 		user = models.GetUserByPhoneAndPassword(searchEmailPhone, searchPassword)
 	}
+	jwtToken := models.CreateNewJWTToken(user)
+	fmt.Println(jwtToken.JwtToken)
 
-	return user, nil
+	return jwtToken, nil
 }
 
 func InsertUser(p graphql.ResolveParams) (i interface{}, err error) {

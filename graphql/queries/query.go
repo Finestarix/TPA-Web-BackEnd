@@ -26,7 +26,7 @@ func Root() *graphql.Object {
 				Type: types.GetUserType(),
 				Args: graphql.FieldConfigArgument{
 					"id": &graphql.ArgumentConfig{
-						Type: graphql.NewNonNull(graphql.Int),
+						Type: graphql.NewNonNull(graphql.String),
 					},
 				},
 				Resolve:     resolvers.GetUserByID,
@@ -43,7 +43,7 @@ func Root() *graphql.Object {
 				Description: "Get User By Email or Phone",
 			},
 			"UserLogin": {
-				Type: types.GetUserType(),
+				Type: types.GetJWTType(),
 				Args: graphql.FieldConfigArgument{
 					"emailphone": &graphql.ArgumentConfig{
 						Type: graphql.NewNonNull(graphql.String),
