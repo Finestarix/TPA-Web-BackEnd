@@ -124,6 +124,16 @@ func Root() *graphql.Object {
 				},
 				Resolve: resolvers.InsertHotel,
 			},
+			"DeleteHotel": &graphql.Field{
+				Type: types.GetHotelType(),
+				Args: graphql.FieldConfigArgument{
+					"id": &graphql.ArgumentConfig{
+						Type: graphql.NewNonNull(graphql.String),
+					},
+				},
+				Resolve: resolvers.DeleteHotel,
+			},
+
 
 			"InsertNewLocation": &graphql.Field{
 				Type: types.GetLocationType(),

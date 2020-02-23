@@ -4,6 +4,7 @@ import (
 	"../models"
 	"errors"
 	"github.com/graphql-go/graphql"
+	"strconv"
 )
 
 func AllHotel(p graphql.ResolveParams) (i interface{}, err error) {
@@ -28,6 +29,16 @@ func InsertHotel(p graphql.ResolveParams) (i interface{}, err error) {
 	newHotel := models.InsertHotel(name, address, location, price, rating, latitude, longitude)
 
 	return newHotel, nil
+}
+
+func DeleteHotel(p graphql.ResolveParams) (i interface{}, err error) {
+	id := p.Args["id"].(string)
+
+	idInt, _ := strconv.Atoi(id)
+
+	hotel := models.DeleteHotel(idInt)
+
+	return hotel, nil
 }
 
 func GetHotelByID(p graphql.ResolveParams) (i interface{}, err error) {

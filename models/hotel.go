@@ -98,6 +98,28 @@ func InsertHotel(name string, address string, city string, price int, rating flo
 	return newHotel
 }
 
+func DeleteHotel(id int) *Hotel {
+	database := connection.GetConnection()
+	defer database.Close()
+
+	var hotel Hotel
+	hotel = GetHotelByID(id)
+
+	if hotel.ID == 0 {
+		log.Println("Delete User Failed")
+		return &hotel
+	}
+
+	err := database.Delete(hotel).Error
+
+	if err != nil {
+		panic("Error Delete User !" + err.Error())
+	}
+
+	log.Println("Delete User Success")
+	return &hotel
+}
+
 func distance(currLatitude float64, currLongitude float64, searchLatitude float64, searchLongitude float64) float64 {
 	const PI float64 = 3.141592653589793
 
