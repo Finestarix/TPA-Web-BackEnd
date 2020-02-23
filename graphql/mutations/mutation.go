@@ -113,16 +113,40 @@ func Root() *graphql.Object {
 						Type: graphql.NewNonNull(graphql.Int),
 					},
 					"rating": &graphql.ArgumentConfig{
-						Type: graphql.NewNonNull(graphql.Float),
+						Type: graphql.NewNonNull(graphql.String),
 					},
 					"longitude": &graphql.ArgumentConfig{
-						Type: graphql.NewNonNull(graphql.Float),
+						Type: graphql.NewNonNull(graphql.String),
 					},
 					"latitude": &graphql.ArgumentConfig{
-						Type: graphql.NewNonNull(graphql.Float),
+						Type: graphql.NewNonNull(graphql.String),
+					},
+					"information": &graphql.ArgumentConfig{
+						Type: graphql.NewNonNull(graphql.String),
 					},
 				},
 				Resolve: resolvers.InsertHotel,
+			},
+			"UpdateHotel": &graphql.Field{
+				Type: types.GetHotelType(),
+				Args: graphql.FieldConfigArgument{
+					"id": &graphql.ArgumentConfig{
+						Type: graphql.NewNonNull(graphql.String),
+					},
+					"name": &graphql.ArgumentConfig{
+						Type: graphql.NewNonNull(graphql.String),
+					},
+					"price": &graphql.ArgumentConfig{
+						Type: graphql.NewNonNull(graphql.Int),
+					},
+					"rating": &graphql.ArgumentConfig{
+						Type: graphql.NewNonNull(graphql.String),
+					},
+					"information": &graphql.ArgumentConfig{
+						Type: graphql.NewNonNull(graphql.String),
+					},
+				},
+				Resolve: resolvers.UpdateHotel,
 			},
 			"DeleteHotel": &graphql.Field{
 				Type: types.GetHotelType(),
@@ -175,6 +199,19 @@ func Root() *graphql.Object {
 					},
 				},
 				Resolve: resolvers.InsertHotelFacility,
+			},
+
+			"InsertHotelType": &graphql.Field{
+				Type: types.GetHotelTypeType(),
+				Args: graphql.FieldConfigArgument{
+					"hotelid": &graphql.ArgumentConfig{
+						Type: graphql.NewNonNull(graphql.Int),
+					},
+					"name": &graphql.ArgumentConfig{
+						Type: graphql.NewNonNull(graphql.String),
+					},
+				},
+				Resolve: resolvers.InsertHotelType,
 			},
 
 			"InsertNewCarModel": &graphql.Field{

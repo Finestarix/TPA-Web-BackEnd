@@ -136,7 +136,7 @@ func Root() *graphql.Object {
 				Type: types.GetHotelType(),
 				Args: graphql.FieldConfigArgument{
 					"id": &graphql.ArgumentConfig{
-						Type: graphql.NewNonNull(graphql.Int),
+						Type: graphql.NewNonNull(graphql.String),
 					},
 				},
 				Resolve:     resolvers.GetHotelByID,
@@ -169,6 +169,12 @@ func Root() *graphql.Object {
 				Type:        graphql.NewList(types.GetHotelFacilityType()),
 				Resolve:     resolvers.AllHotelFacility,
 				Description: "Get All Hotel Facility",
+			},
+
+			"AllHotelType": {
+				Type:        graphql.NewList(types.GetHotelTypeType()),
+				Resolve:     resolvers.AllHotelType,
+				Description: "Get All Hotel Type",
 			},
 
 			"AllCarModel": {

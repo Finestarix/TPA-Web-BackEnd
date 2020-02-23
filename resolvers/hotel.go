@@ -22,11 +22,31 @@ func InsertHotel(p graphql.ResolveParams) (i interface{}, err error) {
 	address := p.Args["address"].(string)
 	location := p.Args["location"].(string)
 	price := p.Args["price"].(int)
-	rating := p.Args["rating"].(float64)
-	latitude := p.Args["latitude"].(float64)
-	longitude := p.Args["longitude"].(float64)
+	rating := p.Args["rating"].(string)
+	latitude := p.Args["latitude"].(string)
+	longitude := p.Args["longitude"].(string)
+	information := p.Args["information"].(string)
 
-	newHotel := models.InsertHotel(name, address, location, price, rating, latitude, longitude)
+	ratingConv, _ := strconv.ParseFloat(rating, 64)
+	latitudeConv, _ := strconv.ParseFloat(latitude, 64)
+	longitudeConv, _ := strconv.ParseFloat(longitude, 64)
+
+	newHotel := models.InsertHotel(name, address, location, price, ratingConv, latitudeConv, longitudeConv, information)
+
+	return newHotel, nil
+}
+
+func UpdateHotel(p graphql.ResolveParams) (i interface{}, err error) {
+	id := p.Args["id"].(string)
+	name := p.Args["name"].(string)
+	price := p.Args["price"].(int)
+	rating := p.Args["rating"].(string)
+	information := p.Args["information"].(string)
+
+	idConv, _ := strconv.Atoi(id)
+	ratingConv, _ := strconv.ParseFloat(rating, 64)
+
+	newHotel := models.UpdateHotel(idConv, name, price, ratingConv, information)
 
 	return newHotel, nil
 }
@@ -42,9 +62,11 @@ func DeleteHotel(p graphql.ResolveParams) (i interface{}, err error) {
 }
 
 func GetHotelByID(p graphql.ResolveParams) (i interface{}, err error) {
-	id := p.Args["id"].(int)
+	id := p.Args["id"].(string)
 
-	hotels := models.GetHotelByID(id)
+	idConv, _ := strconv.Atoi(id)
+
+	hotels := models.GetHotelByID(idConv)
 
 	return hotels, nil
 }

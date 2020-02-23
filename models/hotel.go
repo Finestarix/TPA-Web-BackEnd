@@ -8,20 +8,22 @@ import (
 )
 
 type Hotel struct {
-	ID         int            `gorm:"PRIMARY_KEY"`
-	Name       string         `gorm:"VARCHAR(100); NOT NULL"`
-	Address    string         `gorm:"VARCHAR(100); NOT NULL"`
-	Location   Location       `gorm:"FOREIGNKEY:LocationID"`
-	LocationID int            `gorm:"INTEGER; NOT NULL"`
-	Longitude  float64        `gorm:"DECIMAL(3,1)"`
-	Latitude   float64        `gorm:"DECIMAL(3,1)"`
-	Photo      []HotelImage   `gorm:"FOREIGNKEY:HotelID"`
-	Facility   []HotelFacility `gorm:FOREIGNKEY:HotelID`
-	Price      int            `gorm:"INTEGER; NOT NULL"`
-	Rating     float64        `gorm:"DECIMAL(3,1)"`
-	CreatedAt  time.Time
-	UpdatedAt  time.Time
-	DeletedAt  *time.Time `sql:"index"`
+	ID          int             `gorm:"PRIMARY_KEY"`
+	Name        string          `gorm:"VARCHAR(100); NOT NULL"`
+	Address     string          `gorm:"VARCHAR(100); NOT NULL"`
+	Location    Location        `gorm:"FOREIGNKEY:LocationID"`
+	LocationID  int             `gorm:"INTEGER; NOT NULL"`
+	Longitude   float64         `gorm:"DECIMAL(3,1)"`
+	Latitude    float64         `gorm:"DECIMAL(3,1)"`
+	Photo       []HotelImage    `gorm:"FOREIGNKEY:HotelID"`
+	Facility    []HotelFacility `gorm:"FOREIGNKEY:HotelID"`
+	Type        []HotelType     `gorm:"FOREIGNKEY:HotelID"`
+	Price       int             `gorm:"INTEGER; NOT NULL"`
+	Rating      float64         `gorm:"DECIMAL(3,1)"`
+	Information string          `gorm:"VARCHAR(100)"`
+	CreatedAt   time.Time
+	UpdatedAt   time.Time
+	DeletedAt   *time.Time `sql:"index"`
 }
 
 func init() {
@@ -56,6 +58,7 @@ func GetAllHotel() []Hotel {
 		database.Model(hotels[i]).Related(&hotels[i].Location, "location_id")
 		database.Model(hotels[i]).Related(&hotels[i].Photo, "HotelID")
 		database.Model(hotels[i]).Related(&hotels[i].Facility, "HotelID")
+		database.Model(hotels[i]).Related(&hotels[i].Type, "HotelID")
 	}
 
 	return hotels
@@ -73,29 +76,53 @@ func GetHotelByID(id int) Hotel {
 	database.Model(hotel).Related(&hotel.Location, "location_id")
 	database.Model(hotel).Related(&hotel.Photo, "HotelID")
 	database.Model(hotel).Related(&hotel.Facility, "HotelID")
+	database.Model(hotel).Related(&hotel.Type, "HotelID")
 
 	return hotel
 }
 
-func InsertHotel(name string, address string, city string, price int, rating float64, latitude float64, longitude float64) *Hotel {
+func InsertHotel(name string, address string, city string, price int, rating float64, latitude float64, longitude float64, information string) *Hotel {
 	database := connection.GetConnection()
 	defer database.Close()
 
 	location := GetLocationByCity(city)
 
 	newHotel := &Hotel{
-		Name:       name,
-		Address:    address,
-		LocationID: location.ID,
-		Price:      price,
-		Rating:     rating,
-		Latitude:   latitude,
-		Longitude:  longitude,
+		Name:        name,
+		Address:     address,
+		LocationID:  location.ID,
+		Price:       price,
+		Rating:      rating,
+		Latitude:    latitude,
+		Longitude:   longitude,
+		Information: information,
 	}
 	database.Save(newHotel)
 
 	log.Println("Insert New Hotel Success")
 	return newHotel
+}
+
+func UpdateHotel(id int, name string, price int, rating float64, information string) Hotel {
+	database := connection.GetConnection()
+	defer database.Close()
+
+	var hotel Hotel
+	database.
+		Model(&hotel).
+		Where("id = ?", id).
+		Updates(map[string]interface{}{
+			"name":        name,
+			"price":       price,
+			"rating":      rating,
+			"information": information,
+		})
+	database.
+		Where("id = ?", id).
+		Find(&hotel)
+
+	log.Println("Update Hotel Success")
+	return hotel
 }
 
 func DeleteHotel(id int) *Hotel {
@@ -183,6 +210,7 @@ func GetNearestHotel(currLatitude float64, currLongitude float64) []Hotel {
 		db.Model(hotels[i]).Related(&hotels[i].Location, "location_id")
 		db.Model(hotels[i]).Related(&hotels[i].Photo, "HotelID")
 		db.Model(hotels[i]).Related(&hotels[i].Facility, "HotelID")
+		db.Model(hotels[i]).Related(&hotels[i].Type, "HotelID")
 	}
 
 	//fmt.Println("Before: ")
@@ -214,7 +242,7 @@ func GetHotelByProvince(province string) []Hotel {
 		database.Where("location_id = ?", location[0].ID).Find(&hotels)
 	} else {
 		var listLocationID []int
-		for i := 0 ; i < len(location) ; i++ {
+		for i := 0; i < len(location); i++ {
 			listLocationID = append(listLocationID, location[i].ID)
 		}
 		database.Where("location_id IN (?)", listLocationID).Find(&hotels)
@@ -224,6 +252,7 @@ func GetHotelByProvince(province string) []Hotel {
 		database.Model(hotels[i]).Related(&hotels[i].Location, "location_id")
 		database.Model(hotels[i]).Related(&hotels[i].Photo, "HotelID")
 		database.Model(hotels[i]).Related(&hotels[i].Facility, "HotelID")
+		database.Model(hotels[i]).Related(&hotels[i].Type, "HotelID")
 	}
 
 	return hotels
@@ -242,6 +271,7 @@ func GetHotelByLatLong(latitude float64, longitude float64) Hotel {
 	database.Model(hotel).Related(&hotel.Location, "location_id")
 	database.Model(hotel).Related(&hotel.Photo, "HotelID")
 	database.Model(hotel).Related(&hotel.Facility, "HotelID")
+	database.Model(hotel).Related(&hotel.Type, "HotelID")
 
 	return hotel
 }

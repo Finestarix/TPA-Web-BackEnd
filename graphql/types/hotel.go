@@ -30,6 +30,9 @@ func GetHotelType() *graphql.Object {
 				"facility": {
 					Type: graphql.NewList(GetHotelFacilityType()),
 				},
+				"type": {
+					Type: graphql.NewList(GetHotelTypeType()),
+				},
 				"latitude": &graphql.Field{
 					Type: graphql.Float,
 				},
@@ -41,6 +44,9 @@ func GetHotelType() *graphql.Object {
 				},
 				"rating": &graphql.Field{
 					Type: graphql.Float,
+				},
+				"information": &graphql.Field{
+					Type: graphql.String,
 				},
 			},
 			Description: "Type for Hotel",
