@@ -81,7 +81,7 @@ func GetHotelByID(id int) Hotel {
 	return hotel
 }
 
-func InsertHotel(name string, address string, city string, price int, rating float64, latitude float64, longitude float64, information string) *Hotel {
+func InsertHotel(name string, address string, city string, price int, rating float64, latitude float64, longitude float64, information string) *Hotel{
 	database := connection.GetConnection()
 	defer database.Close()
 
@@ -98,6 +98,11 @@ func InsertHotel(name string, address string, city string, price int, rating flo
 		Information: information,
 	}
 	database.Save(newHotel)
+
+	database.Model(newHotel).Related(&newHotel.Location, "location_id")
+	database.Model(newHotel).Related(&newHotel.Photo, "HotelID")
+	database.Model(newHotel).Related(&newHotel.Facility, "HotelID")
+	database.Model(newHotel).Related(&newHotel.Type, "HotelID")
 
 	log.Println("Insert New Hotel Success")
 	return newHotel
@@ -117,12 +122,18 @@ func UpdateHotel(id int, name string, price int, rating float64, information str
 			"rating":      rating,
 			"information": information,
 		})
+	var newHotel Hotel
 	database.
 		Where("id = ?", id).
-		Find(&hotel)
+		Find(&newHotel)
+
+	database.Model(newHotel).Related(&newHotel.Location, "location_id")
+	database.Model(newHotel).Related(&newHotel.Photo, "HotelID")
+	database.Model(newHotel).Related(&newHotel.Facility, "HotelID")
+	database.Model(newHotel).Related(&newHotel.Type, "HotelID")
 
 	log.Println("Update Hotel Success")
-	return hotel
+	return newHotel
 }
 
 func DeleteHotel(id int) *Hotel {
