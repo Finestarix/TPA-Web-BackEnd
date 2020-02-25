@@ -151,7 +151,7 @@ func DeleteHotel(id int) *Hotel {
 	err := database.Delete(hotel).Error
 
 	if err != nil {
-		panic("Error Delete User !" + err.Error())
+		panic("Error Delete Hotel !" + err.Error())
 	}
 
 	log.Println("Delete User Success")

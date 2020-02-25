@@ -198,6 +198,24 @@ func Root() *graphql.Object {
 				Resolve:     resolvers.GetCarByCity,
 				Description: "Get Car with City",
 			},
+
+			"AllTrain": {
+				Type:        graphql.NewList(types.GetTrainType()),
+				Resolve:     resolvers.AllTrain,
+				Description: "Get All Train",
+			},
+
+			"AllTrainClass": {
+				Type:        graphql.NewList(types.GetTrainClassType()),
+				Resolve:     resolvers.AllTrainClass,
+				Description: "Get All Train Class",
+			},
+
+			"AllTrainStation": {
+				Type:        graphql.NewList(types.GetTrainStationType()),
+				Resolve:     resolvers.AllTrainStation,
+				Description: "Get All Train Station",
+			},
 		},
 	})
 
