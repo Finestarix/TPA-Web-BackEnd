@@ -264,7 +264,7 @@ func Root() *graphql.Object {
 						Type: graphql.NewNonNull(graphql.String),
 					},
 					"arrivalTime": &graphql.ArgumentConfig{
-						Type: graphql.DateTime,
+						Type: graphql.String,
 					},
 					"transit": &graphql.ArgumentConfig{
 						Type: graphql.NewNonNull(graphql.String),
@@ -273,7 +273,7 @@ func Root() *graphql.Object {
 						Type: graphql.NewNonNull(graphql.String),
 					},
 					"departureTime": &graphql.ArgumentConfig{
-						Type: graphql.DateTime,
+						Type: graphql.String,
 					},
 					"seat": &graphql.ArgumentConfig{
 						Type: graphql.NewNonNull(graphql.Int),
@@ -291,10 +291,10 @@ func Root() *graphql.Object {
 						Type: graphql.String,
 					},
 					"arrivalTime": &graphql.ArgumentConfig{
-						Type: graphql.DateTime,
+						Type: graphql.String,
 					},
 					"departureTime": &graphql.ArgumentConfig{
-						Type: graphql.DateTime,
+						Type: graphql.String,
 					},
 					"seat": &graphql.ArgumentConfig{
 						Type: graphql.NewNonNull(graphql.Int),

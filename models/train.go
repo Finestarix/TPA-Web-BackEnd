@@ -74,10 +74,10 @@ func InsertTrain(name string, code string, arrival string, arrivalTime time.Time
 		Name:          name,
 		Code:          code,
 		ArrivalID:     arrivalStation.ID,
-		ArrivalTime:   arrivalTime.Add(-7 * time.Hour),
+		ArrivalTime:   arrivalTime,
 		TransitID:     transitID,
 		DepartureID:   departureStation.ID,
-		DepartureTime: departureTime.Add(-7 * time.Hour),
+		DepartureTime: departureTime,
 		Seat:          seat,
 		Price:         price,
 	}
