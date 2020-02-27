@@ -1,8 +1,18 @@
 package mutations
 
 import (
-	"../../resolvers"
-	"../types"
+	rCar "../../resolvers/car"
+	rCore "../../resolvers/core"
+	rFlight "../../resolvers/flight"
+	rHotel "../../resolvers/hotel"
+	rTrain "../../resolvers/train"
+	rUser "../../resolvers/user"
+	tCar "../types/car"
+	tCore "../types/core"
+	tFlight "../types/flight"
+	tHotel "../types/hotel"
+	tTrain "../types/train"
+	tUser "../types/user"
 	"github.com/graphql-go/graphql"
 )
 
@@ -11,17 +21,32 @@ func Root() *graphql.Object {
 		Name: "Mutation",
 		Fields: graphql.Fields{
 			"InsertNewSubscription": &graphql.Field{
-				Type: types.GetSubscriptionType(),
+				Type: tCore.GetSubscriptionType(),
 				Args: graphql.FieldConfigArgument{
 					"email": &graphql.ArgumentConfig{
 						Type: graphql.NewNonNull(graphql.String),
 					},
 				},
-				Resolve: resolvers.InsertSubscription,
+				Resolve: rCore.InsertSubscription,
+			},
+			"InsertNewLocation": &graphql.Field{
+				Type: tCore.GetLocationType(),
+				Args: graphql.FieldConfigArgument{
+					"city": &graphql.ArgumentConfig{
+						Type: graphql.NewNonNull(graphql.String),
+					},
+					"province": &graphql.ArgumentConfig{
+						Type: graphql.NewNonNull(graphql.String),
+					},
+					"region": &graphql.ArgumentConfig{
+						Type: graphql.NewNonNull(graphql.String),
+					},
+				},
+				Resolve: rCore.InsertLocation,
 			},
 
 			"InsertNewAdmin": &graphql.Field{
-				Type: types.GetAdminType(),
+				Type: tUser.GetAdminType(),
 				Args: graphql.FieldConfigArgument{
 					"username": &graphql.ArgumentConfig{
 						Type: graphql.NewNonNull(graphql.String),
@@ -30,11 +55,10 @@ func Root() *graphql.Object {
 						Type: graphql.NewNonNull(graphql.String),
 					},
 				},
-				Resolve: resolvers.InsertAdmin,
+				Resolve: rUser.InsertAdmin,
 			},
-
 			"InsertNewUser": &graphql.Field{
-				Type: types.GetUserType(),
+				Type: tUser.GetUserType(),
 				Args: graphql.FieldConfigArgument{
 					"firstname": &graphql.ArgumentConfig{
 						Type: graphql.NewNonNull(graphql.String),
@@ -58,10 +82,10 @@ func Root() *graphql.Object {
 						Type: graphql.NewNonNull(graphql.String),
 					},
 				},
-				Resolve: resolvers.InsertUser,
+				Resolve: rUser.InsertUser,
 			},
 			"UpdateUserProfile": &graphql.Field{
-				Type: types.GetUserType(),
+				Type: tUser.GetUserType(),
 				Args: graphql.FieldConfigArgument{
 					"id": &graphql.ArgumentConfig{
 						Type: graphql.NewNonNull(graphql.Int),
@@ -85,20 +109,20 @@ func Root() *graphql.Object {
 						Type: graphql.NewNonNull(graphql.Int),
 					},
 				},
-				Resolve: resolvers.UpdateUserProfile,
+				Resolve: rUser.UpdateUserProfile,
 			},
 			"DeleteUser": &graphql.Field{
-				Type: types.GetUserType(),
+				Type: tUser.GetUserType(),
 				Args: graphql.FieldConfigArgument{
 					"id": &graphql.ArgumentConfig{
 						Type: graphql.NewNonNull(graphql.Int),
 					},
 				},
-				Resolve: resolvers.DeleteUser,
+				Resolve: rUser.DeleteUser,
 			},
 
 			"InsertNewHotel": &graphql.Field{
-				Type: types.GetHotelType(),
+				Type: tHotel.GetHotelType(),
 				Args: graphql.FieldConfigArgument{
 					"name": &graphql.ArgumentConfig{
 						Type: graphql.NewNonNull(graphql.String),
@@ -125,10 +149,10 @@ func Root() *graphql.Object {
 						Type: graphql.NewNonNull(graphql.String),
 					},
 				},
-				Resolve: resolvers.InsertHotel,
+				Resolve: rHotel.InsertHotel,
 			},
 			"UpdateHotel": &graphql.Field{
-				Type: types.GetHotelType(),
+				Type: tHotel.GetHotelType(),
 				Args: graphql.FieldConfigArgument{
 					"id": &graphql.ArgumentConfig{
 						Type: graphql.NewNonNull(graphql.String),
@@ -146,36 +170,19 @@ func Root() *graphql.Object {
 						Type: graphql.NewNonNull(graphql.String),
 					},
 				},
-				Resolve: resolvers.UpdateHotel,
+				Resolve: rHotel.UpdateHotel,
 			},
 			"DeleteHotel": &graphql.Field{
-				Type: types.GetHotelType(),
+				Type: tHotel.GetHotelType(),
 				Args: graphql.FieldConfigArgument{
 					"id": &graphql.ArgumentConfig{
 						Type: graphql.NewNonNull(graphql.String),
 					},
 				},
-				Resolve: resolvers.DeleteHotel,
+				Resolve: rHotel.DeleteHotel,
 			},
-
-			"InsertNewLocation": &graphql.Field{
-				Type: types.GetLocationType(),
-				Args: graphql.FieldConfigArgument{
-					"city": &graphql.ArgumentConfig{
-						Type: graphql.NewNonNull(graphql.String),
-					},
-					"province": &graphql.ArgumentConfig{
-						Type: graphql.NewNonNull(graphql.String),
-					},
-					"region": &graphql.ArgumentConfig{
-						Type: graphql.NewNonNull(graphql.String),
-					},
-				},
-				Resolve: resolvers.InsertLocation,
-			},
-
 			"InsertHotelImage": &graphql.Field{
-				Type: types.GetHotelImageType(),
+				Type: tHotel.GetHotelImageType(),
 				Args: graphql.FieldConfigArgument{
 					"hotelid": &graphql.ArgumentConfig{
 						Type: graphql.NewNonNull(graphql.Int),
@@ -184,11 +191,10 @@ func Root() *graphql.Object {
 						Type: graphql.NewNonNull(graphql.String),
 					},
 				},
-				Resolve: resolvers.InsertHotelImage,
+				Resolve: rHotel.InsertHotelImage,
 			},
-
 			"InsertHotelFacility": &graphql.Field{
-				Type: types.GetHotelFacilityType(),
+				Type: tHotel.GetHotelFacilityType(),
 				Args: graphql.FieldConfigArgument{
 					"hotelid": &graphql.ArgumentConfig{
 						Type: graphql.NewNonNull(graphql.Int),
@@ -197,11 +203,10 @@ func Root() *graphql.Object {
 						Type: graphql.NewNonNull(graphql.String),
 					},
 				},
-				Resolve: resolvers.InsertHotelFacility,
+				Resolve: rHotel.InsertHotelFacility,
 			},
-
 			"InsertHotelType": &graphql.Field{
-				Type: types.GetHotelTypeType(),
+				Type: tHotel.GetHotelTypeType(),
 				Args: graphql.FieldConfigArgument{
 					"hotelid": &graphql.ArgumentConfig{
 						Type: graphql.NewNonNull(graphql.Int),
@@ -210,11 +215,11 @@ func Root() *graphql.Object {
 						Type: graphql.NewNonNull(graphql.String),
 					},
 				},
-				Resolve: resolvers.InsertHotelType,
+				Resolve: rHotel.InsertHotelType,
 			},
 
 			"InsertNewCarModel": &graphql.Field{
-				Type: types.GetCarModelType(),
+				Type: tCar.GetCarModelType(),
 				Args: graphql.FieldConfigArgument{
 					"brand": &graphql.ArgumentConfig{
 						Type: graphql.NewNonNull(graphql.String),
@@ -232,11 +237,10 @@ func Root() *graphql.Object {
 						Type: graphql.NewNonNull(graphql.String),
 					},
 				},
-				Resolve: resolvers.InsertCarModel,
+				Resolve: rCar.InsertCarModel,
 			},
-
 			"InsertNewCar": &graphql.Field{
-				Type: types.GetCarType(),
+				Type: tCar.GetCarType(),
 				Args: graphql.FieldConfigArgument{
 					"location": &graphql.ArgumentConfig{
 						Type: graphql.NewNonNull(graphql.String),
@@ -248,11 +252,11 @@ func Root() *graphql.Object {
 						Type: graphql.NewNonNull(graphql.Int),
 					},
 				},
-				Resolve: resolvers.InsertCar,
+				Resolve: rCar.InsertCar,
 			},
 
 			"InsertNewTrain": &graphql.Field{
-				Type: types.GetTrainType(),
+				Type: tTrain.GetTrainType(),
 				Args: graphql.FieldConfigArgument{
 					"name": &graphql.ArgumentConfig{
 						Type: graphql.NewNonNull(graphql.String),
@@ -282,10 +286,10 @@ func Root() *graphql.Object {
 						Type: graphql.NewNonNull(graphql.Int),
 					},
 				},
-				Resolve: resolvers.InsertTrain,
+				Resolve: rTrain.InsertTrain,
 			},
 			"UpdateTrain": &graphql.Field{
-				Type: types.GetTrainType(),
+				Type: tTrain.GetTrainType(),
 				Args: graphql.FieldConfigArgument{
 					"id": &graphql.ArgumentConfig{
 						Type: graphql.String,
@@ -303,20 +307,19 @@ func Root() *graphql.Object {
 						Type: graphql.NewNonNull(graphql.Int),
 					},
 				},
-				Resolve: resolvers.UpdateTrain,
+				Resolve: rTrain.UpdateTrain,
 			},
 			"DeleteTrain": &graphql.Field{
-				Type: types.GetTrainType(),
+				Type: tTrain.GetTrainType(),
 				Args: graphql.FieldConfigArgument{
 					"id": &graphql.ArgumentConfig{
 						Type: graphql.NewNonNull(graphql.String),
 					},
 				},
-				Resolve: resolvers.DeleteTrain,
+				Resolve: rTrain.DeleteTrain,
 			},
-
 			"InsertNewTrainClass": &graphql.Field{
-				Type: types.GetTrainClassType(),
+				Type: tTrain.GetTrainClassType(),
 				Args: graphql.FieldConfigArgument{
 					"trainId": &graphql.ArgumentConfig{
 						Type: graphql.NewNonNull(graphql.Int),
@@ -325,11 +328,10 @@ func Root() *graphql.Object {
 						Type: graphql.NewNonNull(graphql.String),
 					},
 				},
-				Resolve: resolvers.InsertTrainClass,
+				Resolve: rTrain.InsertTrainClass,
 			},
-
 			"InsertNewTrainStation": &graphql.Field{
-				Type: types.GetTrainStationType(),
+				Type: tTrain.GetTrainStationType(),
 				Args: graphql.FieldConfigArgument{
 					"name": &graphql.ArgumentConfig{
 						Type: graphql.NewNonNull(graphql.String),
@@ -341,7 +343,116 @@ func Root() *graphql.Object {
 						Type: graphql.NewNonNull(graphql.String),
 					},
 				},
-				Resolve: resolvers.InsertTrainStation,
+				Resolve: rTrain.InsertTrainStation,
+			},
+
+			"InsertNewFlight": &graphql.Field{
+				Type: tFlight.GetFlightType(),
+				Args: graphql.FieldConfigArgument{
+					"company": &graphql.ArgumentConfig{
+						Type: graphql.NewNonNull(graphql.String),
+					},
+					"fromAirport": &graphql.ArgumentConfig{
+						Type: graphql.NewNonNull(graphql.String),
+					},
+					"toAirport": &graphql.ArgumentConfig{
+						Type: graphql.NewNonNull(graphql.String),
+					},
+					"transitAirport": &graphql.ArgumentConfig{
+						Type: graphql.NewNonNull(graphql.String),
+					},
+					"arrivalTime": &graphql.ArgumentConfig{
+						Type: graphql.NewNonNull(graphql.String),
+					},
+					"departureTime": &graphql.ArgumentConfig{
+						Type: graphql.NewNonNull(graphql.String),
+					},
+					"price": &graphql.ArgumentConfig{
+						Type: graphql.NewNonNull(graphql.Int),
+					},
+					"model": &graphql.ArgumentConfig{
+						Type: graphql.NewNonNull(graphql.String),
+					},
+				},
+				Resolve: rFlight.InsertFlight,
+			},
+			"UpdateFlight": &graphql.Field{
+				Type: tFlight.GetFlightType(),
+				Args: graphql.FieldConfigArgument{
+					"id": &graphql.ArgumentConfig{
+						Type: graphql.NewNonNull(graphql.Int),
+					},
+					"fromAirport": &graphql.ArgumentConfig{
+						Type: graphql.NewNonNull(graphql.String),
+					},
+					"toAirport": &graphql.ArgumentConfig{
+						Type: graphql.NewNonNull(graphql.String),
+					},
+					"transitAirport": &graphql.ArgumentConfig{
+						Type: graphql.NewNonNull(graphql.String),
+					},
+					"arrivalTime": &graphql.ArgumentConfig{
+						Type: graphql.NewNonNull(graphql.String),
+					},
+					"departureTime": &graphql.ArgumentConfig{
+						Type: graphql.NewNonNull(graphql.String),
+					},
+					"price": &graphql.ArgumentConfig{
+						Type: graphql.NewNonNull(graphql.Int),
+					},
+					"model": &graphql.ArgumentConfig{
+						Type: graphql.NewNonNull(graphql.String),
+					},
+				},
+				Resolve: rFlight.UpdateFlight,
+			},
+			"DeleteFlight": &graphql.Field{
+				Type: tFlight.GetFlightType(),
+				Args: graphql.FieldConfigArgument{
+					"id": &graphql.ArgumentConfig{
+						Type: graphql.NewNonNull(graphql.Int),
+					},
+				},
+				Resolve: rFlight.DeleteFlight,
+			},
+			"InsertNewFlightAirport": &graphql.Field{
+				Type: tFlight.GetFlightAirportType(),
+				Args: graphql.FieldConfigArgument{
+					"name": &graphql.ArgumentConfig{
+						Type: graphql.NewNonNull(graphql.String),
+					},
+					"code": &graphql.ArgumentConfig{
+						Type: graphql.NewNonNull(graphql.String),
+					},
+					"city": &graphql.ArgumentConfig{
+						Type: graphql.NewNonNull(graphql.String),
+					},
+				},
+				Resolve: rFlight.InsertFlightAirport,
+			},
+			"InsertNewFlightCompany": &graphql.Field{
+				Type: tFlight.GetFlightCompanyType(),
+				Args: graphql.FieldConfigArgument{
+					"name": &graphql.ArgumentConfig{
+						Type: graphql.NewNonNull(graphql.String),
+					},
+					"image": &graphql.ArgumentConfig{
+						Type: graphql.NewNonNull(graphql.String),
+					},
+				},
+				Resolve: rFlight.InsertFlightCompany,
+			},
+			"InsertNewFlightFacility": &graphql.Field{
+				Type: tFlight.GetFlightType(),
+				Args: graphql.FieldConfigArgument{
+					"flightID": &graphql.ArgumentConfig{
+						Type: graphql.NewNonNull(graphql.String),
+					},
+					"name": &graphql.ArgumentConfig{
+						Type: graphql.NewNonNull(graphql.String),
+					},
+				},
+				Resolve: rFlight.InsertFlightFacility,
 			},
 		},
 	})

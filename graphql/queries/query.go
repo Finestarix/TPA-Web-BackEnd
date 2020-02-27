@@ -1,8 +1,18 @@
 package queries
 
 import (
-	"../../resolvers"
-	"../types"
+	rCar "../../resolvers/car"
+	rCore "../../resolvers/core"
+	rFlight "../../resolvers/flight"
+	rHotel "../../resolvers/hotel"
+	rTrain "../../resolvers/train"
+	rUser "../../resolvers/user"
+	tCar "../types/car"
+	tCore "../types/core"
+	tFlight "../types/flight"
+	tHotel "../types/hotel"
+	tTrain "../types/train"
+	tUser "../types/user"
 	"github.com/graphql-go/graphql"
 )
 
@@ -12,18 +22,33 @@ func Root() *graphql.Object {
 		Name: "Query",
 		Fields: graphql.Fields{
 			"SendSubscriptionToAll": {
-				Type:        types.GetSubscriptionType(),
-				Resolve:     resolvers.SendSubscriptionToAll,
+				Type:        tCore.GetSubscriptionType(),
+				Resolve:     rCore.SendSubscriptionToAll,
 				Description: "Send Subscription",
+			},
+			"AllLocation": {
+				Type:        graphql.NewList(tCore.GetLocationType()),
+				Resolve:     rCore.AllLocation,
+				Description: "Get All Location",
+			},
+			"GetCityByProvince": {
+				Type: graphql.NewList(tCore.GetLocationType()),
+				Args: graphql.FieldConfigArgument{
+					"province": &graphql.ArgumentConfig{
+						Type: graphql.NewNonNull(graphql.String),
+					},
+				},
+				Resolve:     rCore.GetCityByProvince,
+				Description: "Get Location with Province",
 			},
 
 			"AllAdmin": {
-				Type:        graphql.NewList(types.GetAdminType()),
-				Resolve:     resolvers.AllAdmin,
+				Type:        graphql.NewList(tUser.GetAdminType()),
+				Resolve:     rUser.AllAdmin,
 				Description: "Get All Admins",
 			},
 			"AdminLogin": {
-				Type: types.GetJWTType(),
+				Type: tUser.GetJWTType(),
 				Args: graphql.FieldConfigArgument{
 					"email": &graphql.ArgumentConfig{
 						Type: graphql.NewNonNull(graphql.String),
@@ -32,37 +57,36 @@ func Root() *graphql.Object {
 						Type: graphql.NewNonNull(graphql.String),
 					},
 				},
-				Resolve:     resolvers.LoginAdmin,
+				Resolve:     rUser.LoginAdmin,
 				Description: "Admin Login (Email, Password)",
 			},
-
 			"AllUser": {
-				Type:        graphql.NewList(types.GetUserType()),
-				Resolve:     resolvers.AllUsers,
+				Type:        graphql.NewList(tUser.GetUserType()),
+				Resolve:     rUser.AllUsers,
 				Description: "Get All Users",
 			},
 			"UserByID": {
-				Type: types.GetUserType(),
+				Type: tUser.GetUserType(),
 				Args: graphql.FieldConfigArgument{
 					"id": &graphql.ArgumentConfig{
 						Type: graphql.NewNonNull(graphql.String),
 					},
 				},
-				Resolve:     resolvers.GetUserByID,
+				Resolve:     rUser.GetUserByID,
 				Description: "Get User By ID",
 			},
 			"UserByEmailAndPhone": {
-				Type: types.GetUserType(),
+				Type: tUser.GetUserType(),
 				Args: graphql.FieldConfigArgument{
 					"emailphone": &graphql.ArgumentConfig{
 						Type: graphql.NewNonNull(graphql.String),
 					},
 				},
-				Resolve:     resolvers.GetUserByPhoneEmail,
+				Resolve:     rUser.GetUserByPhoneEmail,
 				Description: "Get User By Email or Phone",
 			},
 			"UserLogin": {
-				Type: types.GetJWTType(),
+				Type: tUser.GetJWTType(),
 				Args: graphql.FieldConfigArgument{
 					"emailphone": &graphql.ArgumentConfig{
 						Type: graphql.NewNonNull(graphql.String),
@@ -71,33 +95,32 @@ func Root() *graphql.Object {
 						Type: graphql.NewNonNull(graphql.String),
 					},
 				},
-				Resolve:     resolvers.UserLogin,
+				Resolve:     rUser.UserLogin,
 				Description: "User Login (Email, Phone, Password)",
 			},
-
 			"AllPhoneCode": {
-				Type:        graphql.NewList(types.GetPhoneCodeType()),
-				Resolve:     resolvers.AllPhoneCode,
+				Type:        graphql.NewList(tUser.GetPhoneCodeType()),
+				Resolve:     rUser.AllPhoneCode,
 				Description: "Get All Phone Code",
 			},
 			"GetPhoneCode": {
-				Type: types.GetPhoneCodeType(),
+				Type: tUser.GetPhoneCodeType(),
 				Args: graphql.FieldConfigArgument{
 					"code": &graphql.ArgumentConfig{
 						Type: graphql.NewNonNull(graphql.String),
 					},
 				},
-				Resolve:     resolvers.GetPhoneCode,
+				Resolve:     rUser.GetPhoneCode,
 				Description: "Get Phone Code",
 			},
 
 			"AllHotel": {
-				Type:        graphql.NewList(types.GetHotelType()),
-				Resolve:     resolvers.AllHotel,
+				Type:        graphql.NewList(tHotel.GetHotelType()),
+				Resolve:     rHotel.AllHotel,
 				Description: "Get All Hotel",
 			},
 			"NearestHotel": {
-				Type: graphql.NewList(types.GetHotelType()),
+				Type: graphql.NewList(tHotel.GetHotelType()),
 				Args: graphql.FieldConfigArgument{
 					"latitude": &graphql.ArgumentConfig{
 						Type: graphql.NewNonNull(graphql.Float),
@@ -106,21 +129,21 @@ func Root() *graphql.Object {
 						Type: graphql.NewNonNull(graphql.Float),
 					},
 				},
-				Resolve:     resolvers.GetNearestHotel,
+				Resolve:     rHotel.GetNearestHotel,
 				Description: "Get Nearest Hotel",
 			},
 			"GetHotelByLocation": {
-				Type: graphql.NewList(types.GetHotelType()),
+				Type: graphql.NewList(tHotel.GetHotelType()),
 				Args: graphql.FieldConfigArgument{
 					"province": &graphql.ArgumentConfig{
 						Type: graphql.NewNonNull(graphql.String),
 					},
 				},
-				Resolve:     resolvers.GetHotelByProvince,
+				Resolve:     rHotel.GetHotelByProvince,
 				Description: "Get Hotel By Province",
 			},
 			"GetHotelByLatLong": {
-				Type: types.GetHotelType(),
+				Type: tHotel.GetHotelType(),
 				Args: graphql.FieldConfigArgument{
 					"latitude": &graphql.ArgumentConfig{
 						Type: graphql.NewNonNull(graphql.Float),
@@ -129,92 +152,91 @@ func Root() *graphql.Object {
 						Type: graphql.NewNonNull(graphql.Float),
 					},
 				},
-				Resolve:     resolvers.GetHotelByLatLong,
+				Resolve:     rHotel.GetHotelByLatLong,
 				Description: "Get Hotel By Latitude and Longitude",
 			},
 			"GetHotelByID": {
-				Type: types.GetHotelType(),
+				Type: tHotel.GetHotelType(),
 				Args: graphql.FieldConfigArgument{
 					"id": &graphql.ArgumentConfig{
 						Type: graphql.NewNonNull(graphql.String),
 					},
 				},
-				Resolve:     resolvers.GetHotelByID,
+				Resolve:     rHotel.GetHotelByID,
 				Description: "Get Hotel By ID",
 			},
-
-			"AllLocation": {
-				Type:        graphql.NewList(types.GetLocationType()),
-				Resolve:     resolvers.AllLocation,
-				Description: "Get All Location",
-			},
-			"GetCityByProvince": {
-				Type: graphql.NewList(types.GetLocationType()),
-				Args: graphql.FieldConfigArgument{
-					"province": &graphql.ArgumentConfig{
-						Type: graphql.NewNonNull(graphql.String),
-					},
-				},
-				Resolve:     resolvers.GetCityByProvince,
-				Description: "Get Location with Province",
-			},
-
 			"AllHotelImage": {
-				Type:        graphql.NewList(types.GetHotelImageType()),
-				Resolve:     resolvers.AllHotelImage,
+				Type:        graphql.NewList(tHotel.GetHotelImageType()),
+				Resolve:     rHotel.AllHotelImage,
 				Description: "Get All Hotel Image",
 			},
-
 			"AllHotelFacility": {
-				Type:        graphql.NewList(types.GetHotelFacilityType()),
-				Resolve:     resolvers.AllHotelFacility,
+				Type:        graphql.NewList(tHotel.GetHotelFacilityType()),
+				Resolve:     rHotel.AllHotelFacility,
 				Description: "Get All Hotel Facility",
 			},
-
 			"AllHotelType": {
-				Type:        graphql.NewList(types.GetHotelTypeType()),
-				Resolve:     resolvers.AllHotelType,
+				Type:        graphql.NewList(tHotel.GetHotelTypeType()),
+				Resolve:     rHotel.AllHotelType,
 				Description: "Get All Hotel Type",
 			},
 
 			"AllCarModel": {
-				Type:        graphql.NewList(types.GetCarModelType()),
-				Resolve:     resolvers.AllCarModel,
+				Type:        graphql.NewList(tCar.GetCarModelType()),
+				Resolve:     rCar.AllCarModel,
 				Description: "Get All Car Model",
 			},
-
 			"AllCar": {
-				Type:        graphql.NewList(types.GetCarType()),
-				Resolve:     resolvers.AllCar,
+				Type:        graphql.NewList(tCar.GetCarType()),
+				Resolve:     rCar.AllCar,
 				Description: "Get All Car",
 			},
 			"GetCarByCity": {
-				Type: graphql.NewList(types.GetCarType()),
+				Type: graphql.NewList(tCar.GetCarType()),
 				Args: graphql.FieldConfigArgument{
 					"city": &graphql.ArgumentConfig{
 						Type: graphql.NewNonNull(graphql.String),
 					},
 				},
-				Resolve:     resolvers.GetCarByCity,
+				Resolve:     rCar.GetCarByCity,
 				Description: "Get Car with City",
 			},
 
 			"AllTrain": {
-				Type:        graphql.NewList(types.GetTrainType()),
-				Resolve:     resolvers.AllTrain,
+				Type:        graphql.NewList(tTrain.GetTrainType()),
+				Resolve:     rTrain.AllTrain,
 				Description: "Get All Train",
 			},
-
 			"AllTrainClass": {
-				Type:        graphql.NewList(types.GetTrainClassType()),
-				Resolve:     resolvers.AllTrainClass,
+				Type:        graphql.NewList(tTrain.GetTrainClassType()),
+				Resolve:     rTrain.AllTrainClass,
 				Description: "Get All Train Class",
 			},
-
 			"AllTrainStation": {
-				Type:        graphql.NewList(types.GetTrainStationType()),
-				Resolve:     resolvers.AllTrainStation,
+				Type:        graphql.NewList(tTrain.GetTrainStationType()),
+				Resolve:     rTrain.AllTrainStation,
 				Description: "Get All Train Station",
+			},
+
+			"AllFlight": {
+				Type:        graphql.NewList(tFlight.GetFlightType()),
+				Resolve:     rFlight.AllFlight,
+				Description: "Get All Flight",
+			},
+			"AllFlightFacility": {
+				Type:        graphql.NewList(tFlight.GetFlightFacilityType()),
+				Resolve:     rFlight.AllFlightFacility,
+				Description: "Get All Flight Facility",
+			},
+			"AllFlightCompany": {
+				Type:        graphql.NewList(tFlight.GetFlightCompanyType()),
+				Resolve:     rFlight.AllFlightCompany,
+				Description: "Get All Flight Company",
+			},
+			"AllFlightAirport": {
+				Type:        graphql.NewList(tFlight.GetFlightAirportType()),
+				Resolve:     rFlight.AllFlightAirport,
+				Description: "Get All Flight Airport",
 			},
 		},
 	})
