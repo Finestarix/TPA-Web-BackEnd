@@ -3,7 +3,6 @@ package flight
 import (
 	models "../../models/flight"
 	"errors"
-	"fmt"
 	"github.com/graphql-go/graphql"
 	"time"
 )
@@ -47,9 +46,6 @@ func UpdateFlight(p graphql.ResolveParams) (i interface{}, err error) {
 
 	arrivalTimeConv, _ := time.Parse(time.RFC3339, arrivalTime)
 	departureTimeConv, _ := time.Parse(time.RFC3339, departureTime)
-
-	fmt.Println(arrivalTimeConv)
-	fmt.Println(departureTimeConv)
 
 	flight := models.UpdateFlight(id, fromAirportName, arrivalTimeConv, toAirportName, departureTimeConv, price, model, transitAirportName)
 

@@ -7,12 +7,14 @@ import (
 	rHotel "../../resolvers/hotel"
 	rTrain "../../resolvers/train"
 	rUser "../../resolvers/user"
+	rBlog "../../resolvers/blog"
 	tCar "../types/car"
 	tCore "../types/core"
 	tFlight "../types/flight"
 	tHotel "../types/hotel"
 	tTrain "../types/train"
 	tUser "../types/user"
+	tBlog "../types/blog"
 	"github.com/graphql-go/graphql"
 )
 
@@ -237,6 +239,12 @@ func Root() *graphql.Object {
 				Type:        graphql.NewList(tFlight.GetFlightAirportType()),
 				Resolve:     rFlight.AllFlightAirport,
 				Description: "Get All Flight Airport",
+			},
+
+			"AllBlog": {
+				Type:        graphql.NewList(tBlog.GetBlogType()),
+				Resolve:     rBlog.AllBlog,
+				Description: "Get All Blog",
 			},
 		},
 	})

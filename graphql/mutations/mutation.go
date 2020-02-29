@@ -1,12 +1,14 @@
 package mutations
 
 import (
+	rBlog "../../resolvers/blog"
 	rCar "../../resolvers/car"
 	rCore "../../resolvers/core"
 	rFlight "../../resolvers/flight"
 	rHotel "../../resolvers/hotel"
 	rTrain "../../resolvers/train"
 	rUser "../../resolvers/user"
+	tBlog "../types/blog"
 	tCar "../types/car"
 	tCore "../types/core"
 	tFlight "../types/flight"
@@ -453,6 +455,55 @@ func Root() *graphql.Object {
 					},
 				},
 				Resolve: rFlight.InsertFlightFacility,
+			},
+
+			"InsertNewBlog": &graphql.Field{
+				Type: tBlog.GetBlogType(),
+				Args: graphql.FieldConfigArgument{
+					"userID": &graphql.ArgumentConfig{
+						Type: graphql.NewNonNull(graphql.Int),
+					},
+					"title": &graphql.ArgumentConfig{
+						Type: graphql.NewNonNull(graphql.String),
+					},
+					"content": &graphql.ArgumentConfig{
+						Type: graphql.NewNonNull(graphql.String),
+					},
+					"image": &graphql.ArgumentConfig{
+						Type: graphql.NewNonNull(graphql.String),
+					},
+					"category": &graphql.ArgumentConfig{
+						Type: graphql.NewNonNull(graphql.String),
+					},
+				},
+				Resolve: rBlog.InsertBlog,
+			},
+			"UpdateBlog": &graphql.Field{
+				Type: tBlog.GetBlogType(),
+				Args: graphql.FieldConfigArgument{
+					"id": &graphql.ArgumentConfig{
+						Type: graphql.NewNonNull(graphql.Int),
+					},
+					"content": &graphql.ArgumentConfig{
+						Type: graphql.NewNonNull(graphql.String),
+					},
+					"image": &graphql.ArgumentConfig{
+						Type: graphql.NewNonNull(graphql.String),
+					},
+					"category": &graphql.ArgumentConfig{
+						Type: graphql.NewNonNull(graphql.String),
+					},
+				},
+				Resolve: rBlog.UpdateBlog,
+			},
+			"DeleteBlog": &graphql.Field{
+				Type: tBlog.GetBlogType(),
+				Args: graphql.FieldConfigArgument{
+					"id": &graphql.ArgumentConfig{
+						Type: graphql.NewNonNull(graphql.Int),
+					},
+				},
+				Resolve: rBlog.DeleteBlog,
 			},
 		},
 	})

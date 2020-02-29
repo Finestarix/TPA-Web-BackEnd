@@ -34,7 +34,7 @@ func GetAllTrainStation() []TrainStation {
 	defer database.Close()
 
 	var trainStation []TrainStation
-	database.Find(&trainStation)
+	database.Where("code != ?", "NULL").Find(&trainStation)
 
 	for i, _ := range trainStation {
 		database.Model(trainStation[i]).Related(&trainStation[i].Location, "location_id")
