@@ -2,6 +2,7 @@ package train
 
 import (
 	"../../connection"
+	"fmt"
 	"log"
 	"time"
 )
@@ -10,7 +11,7 @@ type Train struct {
 	ID            int          `gorm:"PRIMARY_KEY"`
 	Name          string       `gorm:"VARCHAR(100); NOT NULL"`
 	Code          string       `gorm:"VARCHAR(100); NOT NULL"`
-	Class         []TrainClass `gorm:"FOREIGNKEY:TrainID"`
+	Class         string       `gorm:"VARCHAR(100); "`
 	Arrival       TrainStation `gorm:"FOREIGNKEY:ArrivalID"`
 	ArrivalID     int          `gorm:"INTEGER; NOT NULL"`
 	ArrivalTime   time.Time
@@ -50,13 +51,32 @@ func GetAllTrain() []Train {
 		database.Model(train[i]).Related(&train[i].Departure, "departure_id")
 		database.Model(train[i]).Related(&train[i].Transit, "transit_id")
 		database.Model(train[i]).Related(&train[i].Arrival, "arrival_id")
-		database.Model(train[i]).Related(&train[i].Class, "trainID")
 	}
 
 	return train
 }
 
-func InsertTrain(name string, code string, arrival string, arrivalTime time.Time, transit string, departure string, departureTime time.Time, seat int, price int) *Train {
+func GetTrainByArrivalDestination(arrival string, destination string) []Train {
+	database := connection.GetConnection()
+	defer database.Close()
+
+	arrivalStation := SearchTrainStationByName(arrival)
+	departureStation := SearchTrainStationByName(destination)
+
+
+	var train []Train
+	database.Where("arrival_id = ? AND departure_id = ?", arrivalStation.ID, departureStation.ID).Find(&train)
+
+	for i, _ := range train {
+		database.Model(train[i]).Related(&train[i].Departure, "departure_id")
+		database.Model(train[i]).Related(&train[i].Transit, "transit_id")
+		database.Model(train[i]).Related(&train[i].Arrival, "arrival_id")
+	}
+
+	return train
+}
+
+func InsertTrain(name string, code string, class string, arrival string, arrivalTime time.Time, transit string, departure string, departureTime time.Time, seat int, price int) *Train {
 	database := connection.GetConnection()
 	defer database.Close()
 
@@ -73,6 +93,7 @@ func InsertTrain(name string, code string, arrival string, arrivalTime time.Time
 	newTrain := &Train{
 		Name:          name,
 		Code:          code,
+		Class:         class,
 		ArrivalID:     arrivalStation.ID,
 		ArrivalTime:   arrivalTime,
 		TransitID:     transitID,
@@ -83,10 +104,10 @@ func InsertTrain(name string, code string, arrival string, arrivalTime time.Time
 	}
 	database.Save(newTrain)
 
+	fmt.Println(newTrain)
 	database.Model(newTrain).Related(&newTrain.Departure, "departure_id")
 	database.Model(newTrain).Related(&newTrain.Transit, "transit_id")
 	database.Model(newTrain).Related(&newTrain.Arrival, "arrival_id")
-	database.Model(newTrain).Related(&newTrain.Class, "train_id")
 
 	log.Println("Insert New Train Success")
 	return newTrain
@@ -104,7 +125,6 @@ func GetTrainByID(id int) Train {
 	database.Model(train).Related(&train.Departure, "departure_id")
 	database.Model(train).Related(&train.Transit, "transit_id")
 	database.Model(train).Related(&train.Arrival, "arrival_id")
-	database.Model(train).Related(&train.Class, "train_id")
 
 	return train
 }
@@ -131,7 +151,6 @@ func UpdateTrain(id int, arrivalTime time.Time, departureTime time.Time, seat in
 	database.Model(newTrain).Related(&newTrain.Departure, "departure_id")
 	database.Model(newTrain).Related(&newTrain.Transit, "transit_id")
 	database.Model(newTrain).Related(&newTrain.Arrival, "arrival_id")
-	database.Model(newTrain).Related(&newTrain.Class, "train_id")
 
 	log.Println("Update Train Success")
 	return newTrain

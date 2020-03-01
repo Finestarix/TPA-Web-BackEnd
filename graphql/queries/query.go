@@ -209,10 +209,18 @@ func Root() *graphql.Object {
 				Resolve:     rTrain.AllTrain,
 				Description: "Get All Train",
 			},
-			"AllTrainClass": {
-				Type:        graphql.NewList(tTrain.GetTrainClassType()),
-				Resolve:     rTrain.AllTrainClass,
-				Description: "Get All Train Class",
+			"GetTrainByLocation": {
+				Type: graphql.NewList(tTrain.GetTrainType()),
+				Args: graphql.FieldConfigArgument{
+					"arrival": &graphql.ArgumentConfig{
+						Type: graphql.NewNonNull(graphql.String),
+					},
+					"departure": &graphql.ArgumentConfig{
+						Type: graphql.NewNonNull(graphql.String),
+					},
+				},
+				Resolve:     rTrain.GetTrainByArrivalDestination,
+				Description: "Get Train By Arrival and Destination",
 			},
 			"AllTrainStation": {
 				Type:        graphql.NewList(tTrain.GetTrainStationType()),

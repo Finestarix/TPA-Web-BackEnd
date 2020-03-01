@@ -19,7 +19,7 @@ func GetTrainType() *graphql.Object {
 					Type: graphql.String,
 				},
 				"class": &graphql.Field{
-					Type: graphql.NewList(GetTrainClassType()),
+					Type: graphql.String,
 				},
 				"arrival": &graphql.Field{
 					Type: GetTrainStationType(),

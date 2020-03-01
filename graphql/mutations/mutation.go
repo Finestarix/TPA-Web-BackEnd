@@ -266,6 +266,9 @@ func Root() *graphql.Object {
 					"code": &graphql.ArgumentConfig{
 						Type: graphql.NewNonNull(graphql.String),
 					},
+					"class": &graphql.ArgumentConfig{
+						Type: graphql.NewNonNull(graphql.String),
+					},
 					"arrival": &graphql.ArgumentConfig{
 						Type: graphql.NewNonNull(graphql.String),
 					},
@@ -319,18 +322,6 @@ func Root() *graphql.Object {
 					},
 				},
 				Resolve: rTrain.DeleteTrain,
-			},
-			"InsertNewTrainClass": &graphql.Field{
-				Type: tTrain.GetTrainClassType(),
-				Args: graphql.FieldConfigArgument{
-					"trainId": &graphql.ArgumentConfig{
-						Type: graphql.NewNonNull(graphql.Int),
-					},
-					"name": &graphql.ArgumentConfig{
-						Type: graphql.NewNonNull(graphql.String),
-					},
-				},
-				Resolve: rTrain.InsertTrainClass,
 			},
 			"InsertNewTrainStation": &graphql.Field{
 				Type: tTrain.GetTrainStationType(),
