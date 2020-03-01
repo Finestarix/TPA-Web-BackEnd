@@ -1,20 +1,22 @@
 package queries
 
 import (
+	rBlog "../../resolvers/blog"
 	rCar "../../resolvers/car"
 	rCore "../../resolvers/core"
+	rEvent "../../resolvers/event"
 	rFlight "../../resolvers/flight"
 	rHotel "../../resolvers/hotel"
 	rTrain "../../resolvers/train"
 	rUser "../../resolvers/user"
-	rBlog "../../resolvers/blog"
+	tBlog "../types/blog"
 	tCar "../types/car"
 	tCore "../types/core"
+	tEvent "../types/event"
 	tFlight "../types/flight"
 	tHotel "../types/hotel"
 	tTrain "../types/train"
 	tUser "../types/user"
-	tBlog "../types/blog"
 	"github.com/graphql-go/graphql"
 )
 
@@ -212,6 +214,9 @@ func Root() *graphql.Object {
 			"GetTrainByLocation": {
 				Type: graphql.NewList(tTrain.GetTrainType()),
 				Args: graphql.FieldConfigArgument{
+					"date": &graphql.ArgumentConfig{
+						Type: graphql.NewNonNull(graphql.String),
+					},
 					"arrival": &graphql.ArgumentConfig{
 						Type: graphql.NewNonNull(graphql.String),
 					},
@@ -231,6 +236,22 @@ func Root() *graphql.Object {
 			"AllFlight": {
 				Type:        graphql.NewList(tFlight.GetFlightType()),
 				Resolve:     rFlight.AllFlight,
+				Description: "Get All Flight",
+			},
+			"FlightByLocation": {
+				Type:        graphql.NewList(tFlight.GetFlightType()),
+				Args: graphql.FieldConfigArgument{
+					"date": &graphql.ArgumentConfig{
+						Type: graphql.NewNonNull(graphql.String),
+					},
+					"fromAirport": &graphql.ArgumentConfig{
+						Type: graphql.NewNonNull(graphql.String),
+					},
+					"toAirport": &graphql.ArgumentConfig{
+						Type: graphql.NewNonNull(graphql.String),
+					},
+				},
+				Resolve:     rFlight.GetFlightByLocation,
 				Description: "Get All Flight",
 			},
 			"AllFlightFacility": {
@@ -253,6 +274,12 @@ func Root() *graphql.Object {
 				Type:        graphql.NewList(tBlog.GetBlogType()),
 				Resolve:     rBlog.AllBlog,
 				Description: "Get All Blog",
+			},
+
+			"AllEntertainment": {
+				Type:        graphql.NewList(tEvent.GetEntertainmentType()),
+				Resolve:     rEvent.AllEntertainment,
+				Description: "Get All Entertainment",
 			},
 		},
 	})

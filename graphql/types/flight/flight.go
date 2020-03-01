@@ -50,6 +50,9 @@ func GetFlightType() *graphql.Object {
 				"transit": &graphql.Field{
 					Type: GetFlightAirportType(),
 				},
+				"transitDuration": &graphql.Field{
+					Type: graphql.Int,
+				},
 				"transitId": &graphql.Field{
 					Type: graphql.Int,
 				},

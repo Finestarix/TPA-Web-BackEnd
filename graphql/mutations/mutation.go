@@ -4,6 +4,7 @@ import (
 	rBlog "../../resolvers/blog"
 	rCar "../../resolvers/car"
 	rCore "../../resolvers/core"
+	rEvent "../../resolvers/event"
 	rFlight "../../resolvers/flight"
 	rHotel "../../resolvers/hotel"
 	rTrain "../../resolvers/train"
@@ -11,6 +12,7 @@ import (
 	tBlog "../types/blog"
 	tCar "../types/car"
 	tCore "../types/core"
+	tEvent "../types/event"
 	tFlight "../types/flight"
 	tHotel "../types/hotel"
 	tTrain "../types/train"
@@ -345,6 +347,9 @@ func Root() *graphql.Object {
 					"company": &graphql.ArgumentConfig{
 						Type: graphql.NewNonNull(graphql.String),
 					},
+					"duration": &graphql.ArgumentConfig{
+						Type: graphql.NewNonNull(graphql.Int),
+					},
 					"fromAirport": &graphql.ArgumentConfig{
 						Type: graphql.NewNonNull(graphql.String),
 					},
@@ -373,6 +378,9 @@ func Root() *graphql.Object {
 				Type: tFlight.GetFlightType(),
 				Args: graphql.FieldConfigArgument{
 					"id": &graphql.ArgumentConfig{
+						Type: graphql.NewNonNull(graphql.Int),
+					},
+					"duration": &graphql.ArgumentConfig{
 						Type: graphql.NewNonNull(graphql.Int),
 					},
 					"fromAirport": &graphql.ArgumentConfig{
@@ -495,6 +503,79 @@ func Root() *graphql.Object {
 					},
 				},
 				Resolve: rBlog.DeleteBlog,
+			},
+
+			"InsertNewEvent": &graphql.Field{
+				Type: tEvent.GetEntertainmentType(),
+				Args: graphql.FieldConfigArgument{
+					"title": &graphql.ArgumentConfig{
+						Type: graphql.NewNonNull(graphql.String),
+					},
+					"price": &graphql.ArgumentConfig{
+						Type: graphql.NewNonNull(graphql.Int),
+					},
+					"location": &graphql.ArgumentConfig{
+						Type: graphql.NewNonNull(graphql.String),
+					},
+					"latitude": &graphql.ArgumentConfig{
+						Type: graphql.NewNonNull(graphql.Float),
+					},
+					"longitude": &graphql.ArgumentConfig{
+						Type: graphql.NewNonNull(graphql.Float),
+					},
+					"date": &graphql.ArgumentConfig{
+						Type: graphql.NewNonNull(graphql.String),
+					},
+					"category": &graphql.ArgumentConfig{
+						Type: graphql.NewNonNull(graphql.String),
+					},
+					"image": &graphql.ArgumentConfig{
+						Type: graphql.NewNonNull(graphql.String),
+					},
+				},
+				Resolve: rEvent.InsertEntertainment,
+			},
+			"UpdateEvent": &graphql.Field{
+				Type: tEvent.GetEntertainmentType(),
+				Args: graphql.FieldConfigArgument{
+					"id": &graphql.ArgumentConfig{
+						Type: graphql.NewNonNull(graphql.String),
+					},
+					"title": &graphql.ArgumentConfig{
+						Type: graphql.NewNonNull(graphql.String),
+					},
+					"price": &graphql.ArgumentConfig{
+						Type: graphql.NewNonNull(graphql.Int),
+					},
+					"location": &graphql.ArgumentConfig{
+						Type: graphql.NewNonNull(graphql.String),
+					},
+					"latitude": &graphql.ArgumentConfig{
+						Type: graphql.NewNonNull(graphql.Float),
+					},
+					"longitude": &graphql.ArgumentConfig{
+						Type: graphql.NewNonNull(graphql.Float),
+					},
+					"date": &graphql.ArgumentConfig{
+						Type: graphql.NewNonNull(graphql.String),
+					},
+					"category": &graphql.ArgumentConfig{
+						Type: graphql.NewNonNull(graphql.String),
+					},
+					"image": &graphql.ArgumentConfig{
+						Type: graphql.NewNonNull(graphql.String),
+					},
+				},
+				Resolve: rEvent.UpdateEntertainment,
+			},
+			"DeleteEvent": &graphql.Field{
+				Type: tEvent.GetEntertainmentType(),
+				Args: graphql.FieldConfigArgument{
+					"id": &graphql.ArgumentConfig{
+						Type: graphql.NewNonNull(graphql.Int),
+					},
+				},
+				Resolve: rEvent.DeleteEntertainment,
 			},
 		},
 	})

@@ -2,7 +2,6 @@ package train
 
 import (
 	"../../connection"
-	"fmt"
 	"log"
 	"time"
 )
@@ -56,7 +55,7 @@ func GetAllTrain() []Train {
 	return train
 }
 
-func GetTrainByArrivalDestination(arrival string, destination string) []Train {
+func GetTrainByArrivalDestination(arrival string, destination string, date time.Time) []Train {
 	database := connection.GetConnection()
 	defer database.Close()
 
@@ -65,7 +64,8 @@ func GetTrainByArrivalDestination(arrival string, destination string) []Train {
 
 
 	var train []Train
-	database.Where("arrival_id = ? AND departure_id = ?", arrivalStation.ID, departureStation.ID).Find(&train)
+	database.Where("arrival_id = ? AND departure_id = ? AND DATE_PART('day',arrival_time) = ?",
+		arrivalStation.ID, departureStation.ID, date.Day()).Find(&train)
 
 	for i, _ := range train {
 		database.Model(train[i]).Related(&train[i].Departure, "departure_id")
@@ -95,16 +95,15 @@ func InsertTrain(name string, code string, class string, arrival string, arrival
 		Code:          code,
 		Class:         class,
 		ArrivalID:     arrivalStation.ID,
-		ArrivalTime:   arrivalTime,
+		ArrivalTime:   arrivalTime.Add(-7 * time.Hour),
 		TransitID:     transitID,
 		DepartureID:   departureStation.ID,
-		DepartureTime: departureTime,
+		DepartureTime: departureTime.Add(-7 * time.Hour),
 		Seat:          seat,
 		Price:         price,
 	}
 	database.Save(newTrain)
 
-	fmt.Println(newTrain)
 	database.Model(newTrain).Related(&newTrain.Departure, "departure_id")
 	database.Model(newTrain).Related(&newTrain.Transit, "transit_id")
 	database.Model(newTrain).Related(&newTrain.Arrival, "arrival_id")

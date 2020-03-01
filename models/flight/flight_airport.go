@@ -34,7 +34,7 @@ func GetAllFlightAirport() []FlightAirport {
 	defer database.Close()
 
 	var airport []FlightAirport
-	database.Find(&airport)
+	database.Where("code != ?", "NULL").Find(&airport)
 
 	for i, _ := range airport {
 		database.Model(&airport[i]).Related(&airport[i].Location, "location_id")

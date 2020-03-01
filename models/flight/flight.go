@@ -23,7 +23,8 @@ type Flight struct {
 	Facility          []FlightFacility `gorm:"FOREIGNKEY:FlightID"`
 	Transit           FlightAirport    `gorm:"FOREIGNKEY:TransitID"`
 	TransitID         int              `gorm:"INTEGER"`
-	TransitLocationID int              `gorm:"INTEGER"`
+	TransitDuration   int
+	TransitLocationID int `gorm:"INTEGER"`
 	CreatedAt         time.Time
 	UpdatedAt         time.Time
 	DeletedAt         *time.Time `sql:"index"`
@@ -75,8 +76,35 @@ func GetFlightByID(id int) Flight {
 	return flight
 }
 
+func GetFlightByAirport(fromAirportName string, toAirportName string, date time.Time) []Flight {
+	database := connection.GetConnection()
+	defer database.Close()
+
+	fromAirport := GetFlightAirportByCode(fromAirportName)
+	toAirport := GetFlightAirportByCode(toAirportName)
+
+	var flight []Flight
+	database.
+		Where("from_airport_id = ? AND to_airport_id = ? AND DATE_PART('day',arrival_time) = ?",
+			fromAirport.ID, toAirport.ID, date.Day()).
+		Find(&flight)
+
+	for i, _ := range flight {
+		database.Model(&flight[i]).Related(&flight[i].Company, "company_id")
+		database.Model(&flight[i]).Related(&flight[i].FromAirport, "from_airport_id")
+		database.Model(&flight[i]).Related(&flight[i].FromAirport.Location, "from_location_id")
+		database.Model(&flight[i]).Related(&flight[i].ToAirport, "to_airport_id")
+		database.Model(&flight[i]).Related(&flight[i].ToAirport.Location, "to_location_id")
+		database.Model(&flight[i]).Related(&flight[i].Facility, "flight_id")
+		database.Model(&flight[i]).Related(&flight[i].Transit, "transit_id")
+		database.Model(&flight[i]).Related(&flight[i].Transit.Location, "transit_location_id")
+	}
+	return flight
+}
+
 func InsertFlight(companyName string, fromAirportName string, arrivalTime time.Time,
-	toAirportName string, departureTime time.Time, price int, model string, transitAirportName string) *Flight {
+	toAirportName string, departureTime time.Time, price int, model string, transitDuration int,
+	transitAirportName string) *Flight {
 
 	database := connection.GetConnection()
 	defer database.Close()
@@ -96,12 +124,13 @@ func InsertFlight(companyName string, fromAirportName string, arrivalTime time.T
 	newFlight := &Flight{
 		CompanyID:         company.ID,
 		FromAirportID:     fromAirport.ID,
-		ArrivalTime:       arrivalTime,
+		ArrivalTime:       arrivalTime.Add(-7 * time.Hour),
 		ToAirportID:       toAirport.ID,
-		DepartureTime:     departureTime,
+		DepartureTime:     departureTime.Add(-7 * time.Hour),
 		TransitID:         transitID,
 		Price:             price,
 		Model:             model,
+		TransitDuration:   transitDuration,
 		FromLocationID:    fromAirport.LocationID,
 		ToLocationID:      toAirport.LocationID,
 		TransitLocationID: transitLocationID,
@@ -112,7 +141,7 @@ func InsertFlight(companyName string, fromAirportName string, arrivalTime time.T
 	return newFlight
 }
 
-func UpdateFlight(id int, fromAirportName string, arrivalTime time.Time,
+func UpdateFlight(id int, fromAirportName string, arrivalTime time.Time, transitDuration int,
 	toAirportName string, departureTime time.Time, price int, model string, transitAirportName string) Flight {
 	database := connection.GetConnection()
 	defer database.Close()
@@ -134,9 +163,10 @@ func UpdateFlight(id int, fromAirportName string, arrivalTime time.Time,
 		Where("id = ?", id).
 		Updates(map[string]interface{}{
 			"FromAirportID":     fromAirport.ID,
-			"ArrivalTime":       arrivalTime,
+			"TransitDuration":   transitDuration,
+			"ArrivalTime":       arrivalTime.Add(-7 * time.Hour),
 			"ToAirportID":       toAirport.ID,
-			"DepartureTime":     departureTime,
+			"DepartureTime":     departureTime.Add(-7 * time.Hour),
 			"TransitID":         transitID,
 			"Price":             price,
 			"Model":             model,

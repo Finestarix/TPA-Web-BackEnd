@@ -3,7 +3,6 @@ package train
 import (
 	models "../../models/train"
 	"errors"
-	"fmt"
 	"github.com/graphql-go/graphql"
 	"strconv"
 	"time"
@@ -22,8 +21,11 @@ func AllTrain(p graphql.ResolveParams) (i interface{}, err error) {
 func GetTrainByArrivalDestination(p graphql.ResolveParams) (i interface{}, err error) {
 	arrival := p.Args["arrival"].(string)
 	departure := p.Args["departure"].(string)
+	date := p.Args["date"].(string)
 
-	train := models.GetTrainByArrivalDestination(arrival, departure)
+	dateConv, _ := time.Parse(time.RFC3339, date)
+
+	train := models.GetTrainByArrivalDestination(arrival, departure, dateConv)
 
 	if len(train) == 0 {
 		return nil, errors.New("error: no data found")
@@ -48,8 +50,6 @@ func InsertTrain(p graphql.ResolveParams) (i interface{}, err error) {
 	departureTimeConv, _ := time.Parse(time.RFC3339, departureTime)
 
 	newTrain := models.InsertTrain(name, code, class, arrival, arrivalTimeConv, transit, departure, departureTimeConv, seat, price)
-
-	fmt.Println(newTrain)
 
 	return newTrain, nil
 }
