@@ -15,6 +15,22 @@ func AllBlog(p graphql.ResolveParams) (i interface{}, err error) {
 	return blog, nil
 }
 
+func GetBlogByID(p graphql.ResolveParams) (i interface{}, err error) {
+	id := p.Args["id"].(int)
+
+	newBlog := models.GetBlogByID(id)
+
+	return newBlog, nil
+}
+
+func GetRecBlog(p graphql.ResolveParams) (i interface{}, err error) {
+	id := p.Args["id"].(int)
+
+	newBlog := models.GetRecommendedBlog(id)
+
+	return newBlog, nil
+}
+
 func InsertBlog(p graphql.ResolveParams) (i interface{}, err error) {
 	userID := p.Args["userID"].(int)
 	title := p.Args["title"].(string)

@@ -7,6 +7,7 @@ import (
 	rEvent "../../resolvers/event"
 	rFlight "../../resolvers/flight"
 	rHotel "../../resolvers/hotel"
+	rPromo "../../resolvers/promo"
 	rTrain "../../resolvers/train"
 	rUser "../../resolvers/user"
 	tBlog "../types/blog"
@@ -15,6 +16,7 @@ import (
 	tEvent "../types/event"
 	tFlight "../types/flight"
 	tHotel "../types/hotel"
+	tPromo "../types/promo"
 	tTrain "../types/train"
 	tUser "../types/user"
 	"github.com/graphql-go/graphql"
@@ -239,7 +241,7 @@ func Root() *graphql.Object {
 				Description: "Get All Flight",
 			},
 			"FlightByLocation": {
-				Type:        graphql.NewList(tFlight.GetFlightType()),
+				Type: graphql.NewList(tFlight.GetFlightType()),
 				Args: graphql.FieldConfigArgument{
 					"date": &graphql.ArgumentConfig{
 						Type: graphql.NewNonNull(graphql.String),
@@ -275,10 +277,51 @@ func Root() *graphql.Object {
 				Resolve:     rBlog.AllBlog,
 				Description: "Get All Blog",
 			},
+			"GetRecommendedBlog": {
+				Type:        graphql.NewList(tBlog.GetBlogType()),
+				Resolve:     rBlog.GetRecBlog,
+				Args: graphql.FieldConfigArgument{
+					"id": &graphql.ArgumentConfig{
+						Type: graphql.NewNonNull(graphql.Int),
+					},
+				},
+				Description: "Get All Recommended Blog",
+			},
+			"BlogByID": {
+				Type:    tBlog.GetBlogType(),
+				Resolve: rBlog.GetBlogByID,
+				Args: graphql.FieldConfigArgument{
+					"id": &graphql.ArgumentConfig{
+						Type: graphql.NewNonNull(graphql.Int),
+					},
+				},
+				Description: "Get All Blog By ID",
+			},
 
 			"AllEntertainment": {
 				Type:        graphql.NewList(tEvent.GetEntertainmentType()),
 				Resolve:     rEvent.AllEntertainment,
+				Description: "Get All Entertainment",
+			},
+
+			"GetPromo": {
+				Type: tPromo.GetPromoType(),
+				Args: graphql.FieldConfigArgument{
+					"id": &graphql.ArgumentConfig{
+						Type: graphql.NewNonNull(graphql.Int),
+					},
+				},
+				Resolve:     rPromo.GetPromo,
+				Description: "Get All Entertainment",
+			},
+			"OtherPromo": {
+				Type: graphql.NewList(tPromo.GetPromoType()),
+				Args: graphql.FieldConfigArgument{
+					"id": &graphql.ArgumentConfig{
+						Type: graphql.NewNonNull(graphql.Int),
+					},
+				},
+				Resolve:     rPromo.OtherPromo,
 				Description: "Get All Entertainment",
 			},
 		},

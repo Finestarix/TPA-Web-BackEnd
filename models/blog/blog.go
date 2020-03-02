@@ -59,6 +59,16 @@ func GetBlogByID(id int) Blog {
 	return blog
 }
 
+func GetRecommendedBlog(id int) []Blog{
+	database := connection.GetConnection()
+	defer database.Close()
+
+	var blogs []Blog
+	database.Where("id != ?", id).Limit(4).Find(&blogs)
+
+	return blogs
+}
+
 func InsertBlog(userID int, title string, content string, image string, category string) *Blog {
 	database := connection.GetConnection()
 	defer database.Close()
