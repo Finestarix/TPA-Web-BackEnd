@@ -110,7 +110,7 @@ func Root() *graphql.Object {
 						Type: graphql.NewNonNull(graphql.String),
 					},
 					"zipcode": &graphql.ArgumentConfig{
-						Type: graphql.NewNonNull(graphql.Int),
+						Type: graphql.NewNonNull(graphql.String),
 					},
 				},
 				Resolve: rUser.UpdateUserProfile,

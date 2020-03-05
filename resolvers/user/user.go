@@ -4,6 +4,7 @@ import (
 	models "../../models/user"
 	"errors"
 	"github.com/graphql-go/graphql"
+	"strconv"
 )
 
 func AllUsers(p graphql.ResolveParams) (i interface{}, err error) {
@@ -73,9 +74,11 @@ func UpdateUserProfile(p graphql.ResolveParams) (i interface{}, err error) {
 	lastname := p.Args["lastname"].(string)
 	city := p.Args["city"].(string)
 	address := p.Args["address"].(string)
-	zipcode := p.Args["zipcode"].(int)
+	zipcode := p.Args["zipcode"].(string)
 
-	updatedUser := models.UpdateUserProfile(id, title, firstname, lastname, city, address, zipcode)
+	zipcodeConv, _ := strconv.Atoi(zipcode)
+
+	updatedUser := models.UpdateUserProfile(id, title, firstname, lastname, city, address, zipcodeConv)
 
 	return updatedUser, nil
 }
