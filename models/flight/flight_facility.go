@@ -2,6 +2,7 @@ package flight
 
 import (
 	"../../connection"
+	"../core"
 	"log"
 	"time"
 )
@@ -31,6 +32,9 @@ func GetAllFlightFacility() []FlightFacility {
 	defer database.Close()
 
 	var facility []FlightFacility
+	if core.ValidateAPIKey() == false {
+		return facility
+	}
 	database.Find(&facility)
 
 	return facility

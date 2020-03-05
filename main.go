@@ -1,6 +1,7 @@
 package main
 
 import (
+	"./connection"
 	"./graphql/mutations"
 	"./graphql/queries"
 	"./middleware"
@@ -30,5 +31,8 @@ func main() {
 
 	newHandlerSchema := middleware.SetCORS(handlerSchema)
 
-	log.Fatal(http.ListenAndServe(":4201", newHandlerSchema))
+	router := connection.NewRouter()
+	router.Handle("/{key}", newHandlerSchema)
+
+	log.Fatal(http.ListenAndServe(":4201", router))
 }

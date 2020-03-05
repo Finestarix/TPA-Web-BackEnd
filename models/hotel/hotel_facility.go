@@ -2,6 +2,7 @@ package hotel
 
 import (
 	"../../connection"
+	"../core"
 	"log"
 	"time"
 )
@@ -31,6 +32,9 @@ func GetAllHotelFacility() []HotelFacility {
 	defer database.Close()
 
 	var hotelFacility []HotelFacility
+	if core.ValidateAPIKey() == false {
+		return hotelFacility
+	}
 	database.Find(&hotelFacility)
 
 	return hotelFacility

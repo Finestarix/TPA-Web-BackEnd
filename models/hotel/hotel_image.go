@@ -2,6 +2,7 @@ package hotel
 
 import (
 	"../../connection"
+	"../core"
 	"log"
 	"time"
 )
@@ -43,6 +44,9 @@ func GetAllHotelImage() []HotelImage {
 	defer database.Close()
 
 	var hotelImages []HotelImage
+	if core.ValidateAPIKey() == false {
+		return hotelImages
+	}
 	database.Find(&hotelImages)
 
 	return hotelImages

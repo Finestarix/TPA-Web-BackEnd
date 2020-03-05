@@ -1,9 +1,17 @@
 package middleware
 
-import "net/http"
+import (
+	"github.com/gorilla/mux"
+	"net/http"
+)
+
+var APIKey string
 
 func SetCORS(handler http.Handler) http.Handler {
 	return http.HandlerFunc(func(writer http.ResponseWriter, request *http.Request) {
+
+		vars := mux.Vars(request)
+		APIKey = vars["key"]
 
 		writer.Header().Set("Access-Control-Allow-Origin", "*")
 		writer.Header().Set("Access-Control-Allow-Methods", "POST")

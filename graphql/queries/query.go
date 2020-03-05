@@ -161,6 +161,19 @@ func Root() *graphql.Object {
 				Resolve:     rHotel.GetHotelByLatLong,
 				Description: "Get Hotel By Latitude and Longitude",
 			},
+			"GetHotelByRadius": {
+				Type: graphql.NewList(tHotel.GetHotelType()),
+				Args: graphql.FieldConfigArgument{
+					"latitude": &graphql.ArgumentConfig{
+						Type: graphql.NewNonNull(graphql.Float),
+					},
+					"longitude": &graphql.ArgumentConfig{
+						Type: graphql.NewNonNull(graphql.Float),
+					},
+				},
+				Resolve:     rHotel.GetHotelByRadius,
+				Description: "Get Hotel By Radius",
+			},
 			"GetHotelByID": {
 				Type: tHotel.GetHotelType(),
 				Args: graphql.FieldConfigArgument{
@@ -278,8 +291,8 @@ func Root() *graphql.Object {
 				Description: "Get All Blog",
 			},
 			"GetRecommendedBlog": {
-				Type:        graphql.NewList(tBlog.GetBlogType()),
-				Resolve:     rBlog.GetRecBlog,
+				Type:    graphql.NewList(tBlog.GetBlogType()),
+				Resolve: rBlog.GetRecBlog,
 				Args: graphql.FieldConfigArgument{
 					"id": &graphql.ArgumentConfig{
 						Type: graphql.NewNonNull(graphql.Int),
@@ -302,6 +315,47 @@ func Root() *graphql.Object {
 				Type:        graphql.NewList(tEvent.GetEntertainmentType()),
 				Resolve:     rEvent.AllEntertainment,
 				Description: "Get All Entertainment",
+			},
+			"GetEntertainmentCategory": {
+				Type: graphql.NewList(tEvent.GetEntertainmentType()),
+				Args: graphql.FieldConfigArgument{
+					"category": &graphql.ArgumentConfig {
+						Type: graphql.NewNonNull(graphql.String),
+					},
+				},
+				Resolve:     rEvent.GetEntertainmentByCategory,
+				Description: "Get All Entertainment By Category",
+			},
+			"GetFilterEntertainment": {
+				Type: graphql.NewList(tEvent.GetEntertainmentType()),
+				Args: graphql.FieldConfigArgument{
+					"lowPrice": &graphql.ArgumentConfig {
+						Type: graphql.NewNonNull(graphql.Int),
+					},
+					"highPrice": &graphql.ArgumentConfig {
+						Type: graphql.NewNonNull(graphql.Int),
+					},
+					"startDate": &graphql.ArgumentConfig {
+						Type: graphql.NewNonNull(graphql.String),
+					},
+					"endDate": &graphql.ArgumentConfig {
+						Type: graphql.NewNonNull(graphql.String),
+					},
+					"isActivity": &graphql.ArgumentConfig {
+						Type: graphql.NewNonNull(graphql.String),
+					},
+					"isEvent": &graphql.ArgumentConfig {
+						Type: graphql.NewNonNull(graphql.String),
+					},
+					"isAttraction": &graphql.ArgumentConfig {
+						Type: graphql.NewNonNull(graphql.String),
+					},
+					"location": &graphql.ArgumentConfig {
+						Type: graphql.NewNonNull(graphql.String),
+					},
+				},
+				Resolve:     rEvent.GetFilterEntertainment,
+				Description: "Get All Entertainment By Category",
 			},
 
 			"GetPromo": {

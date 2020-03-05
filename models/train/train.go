@@ -2,6 +2,7 @@ package train
 
 import (
 	"../../connection"
+	"../core"
 	"log"
 	"time"
 )
@@ -44,6 +45,9 @@ func GetAllTrain() []Train {
 	defer database.Close()
 
 	var train []Train
+	if core.ValidateAPIKey() == false {
+		return train
+	}
 	database.Find(&train)
 
 	for i, _ := range train {
@@ -64,6 +68,9 @@ func GetTrainByArrivalDestination(arrival string, destination string, date time.
 
 
 	var train []Train
+	if core.ValidateAPIKey() == false {
+		return train
+	}
 	database.Where("arrival_id = ? AND departure_id = ? AND DATE_PART('day',arrival_time) = ?",
 		arrivalStation.ID, departureStation.ID, date.Day()).Find(&train)
 
@@ -79,6 +86,10 @@ func GetTrainByArrivalDestination(arrival string, destination string, date time.
 func InsertTrain(name string, code string, class string, arrival string, arrivalTime time.Time, transit string, departure string, departureTime time.Time, seat int, price int) *Train {
 	database := connection.GetConnection()
 	defer database.Close()
+
+	if price <= 0 {
+		return nil
+	}
 
 	arrivalStation := SearchTrainStationByName(arrival)
 	departureStation := SearchTrainStationByName(departure)
@@ -117,6 +128,9 @@ func GetTrainByID(id int) Train {
 	defer database.Close()
 
 	var train Train
+	if core.ValidateAPIKey() == false {
+		return train
+	}
 	database.
 		Where("id = ?", id).
 		First(&train)

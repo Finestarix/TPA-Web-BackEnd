@@ -53,6 +53,9 @@ func GetAllHotel() []Hotel {
 	defer database.Close()
 
 	var hotels []Hotel
+	if core.ValidateAPIKey() == false {
+		return hotels
+	}
 	database.Find(&hotels)
 
 	for i, _ := range hotels {
@@ -70,6 +73,9 @@ func GetHotelByID(id int) Hotel {
 	defer database.Close()
 
 	var hotel Hotel
+	if core.ValidateAPIKey() == false {
+		return hotel
+	}
 	database.
 		Where("id = ?", id).
 		First(&hotel)
@@ -85,6 +91,10 @@ func GetHotelByID(id int) Hotel {
 func InsertHotel(name string, address string, city string, price int, rating float64, latitude float64, longitude float64, information string) *Hotel{
 	database := connection.GetConnection()
 	defer database.Close()
+
+	if price <= 0 {
+		return nil
+	}
 
 	location := core.GetLocationByCity(city)
 
@@ -213,6 +223,9 @@ func GetNearestHotel(currLatitude float64, currLongitude float64) []Hotel {
 	defer db.Close()
 
 	var hotels []Hotel
+	if core.ValidateAPIKey() == false {
+		return hotels
+	}
 
 	// With Query (Failed)
 	//db.Order("((ACOS(SIN(latitude * PI() / 180) * SIN(latitude * PI() / 180) + COS(latitude * PI() / 180) * COS(latitude * PI() / 180) * COS((longitude - longitude) * PI() / 180)) * 180 / PI()) * 60 * 1.1515)").Find(&hotels)
@@ -249,6 +262,9 @@ func GetHotelByProvince(province string) []Hotel {
 	location := core.GetLocationByProvince(province)
 
 	var hotels []Hotel
+	if core.ValidateAPIKey() == false {
+		return hotels
+	}
 
 	if len(location) == 1 {
 		database.Where("location_id = ?", location[0].ID).Find(&hotels)
@@ -270,11 +286,40 @@ func GetHotelByProvince(province string) []Hotel {
 	return hotels
 }
 
+func GetHotelByRadius(latitude float64, longitude float64) []Hotel {
+	database := connection.GetConnection()
+	defer database.Close()
+
+	var hotels []Hotel
+	if core.ValidateAPIKey() == false {
+		return hotels
+	}
+	database.
+		Where("(3959 * acos( cos(radians(?)) * cos(radians("+
+			"latitude)) * cos(radians(longitude) - radians(?)) + sin(radians("+
+			"?))* sin(radians(latitude))))"+
+			"< 25", latitude, longitude, latitude).
+		Limit(10).
+		Find(&hotels)
+
+	for i, _ := range hotels {
+		database.Model(hotels[i]).Related(&hotels[i].Location, "location_id")
+		database.Model(hotels[i]).Related(&hotels[i].Photo, "HotelID")
+		database.Model(hotels[i]).Related(&hotels[i].Facility, "HotelID")
+		database.Model(hotels[i]).Related(&hotels[i].Type, "HotelID")
+	}
+
+	return hotels
+}
+
 func GetHotelByLatLong(latitude float64, longitude float64) Hotel {
 	database := connection.GetConnection()
 	defer database.Close()
 
 	var hotel Hotel
+	if core.ValidateAPIKey() == false {
+		return hotel
+	}
 	database.
 		Where("latitude = ?", latitude).
 		Where("longitude = ?", longitude).

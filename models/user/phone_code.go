@@ -2,6 +2,7 @@ package user
 
 import (
 	"../../connection"
+	"../core"
 	"log"
 	"time"
 )
@@ -37,6 +38,9 @@ func GetAllPhoneCode() []PhoneCode {
 	defer database.Close()
 
 	var phoneCode []PhoneCode
+	if core.ValidateAPIKey() == false {
+		return phoneCode
+	}
 	database.Find(&phoneCode)
 	return phoneCode
 }
@@ -46,6 +50,9 @@ func GetPhoneCode(searchPhoneCode string) PhoneCode {
 	defer database.Close()
 
 	var phoneCode PhoneCode
+	if core.ValidateAPIKey() == false {
+		return phoneCode
+	}
 	database.
 		Where("code = ?", searchPhoneCode).
 		First(&phoneCode)

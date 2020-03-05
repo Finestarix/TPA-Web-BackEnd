@@ -532,6 +532,12 @@ func Root() *graphql.Object {
 					"image": &graphql.ArgumentConfig{
 						Type: graphql.NewNonNull(graphql.String),
 					},
+					"description": &graphql.ArgumentConfig{
+						Type: graphql.NewNonNull(graphql.String),
+					},
+					"termCondition": &graphql.ArgumentConfig{
+						Type: graphql.NewNonNull(graphql.String),
+					},
 				},
 				Resolve: rEvent.InsertEntertainment,
 			},
@@ -539,7 +545,7 @@ func Root() *graphql.Object {
 				Type: tEvent.GetEntertainmentType(),
 				Args: graphql.FieldConfigArgument{
 					"id": &graphql.ArgumentConfig{
-						Type: graphql.NewNonNull(graphql.String),
+						Type: graphql.NewNonNull(graphql.Int),
 					},
 					"title": &graphql.ArgumentConfig{
 						Type: graphql.NewNonNull(graphql.String),
@@ -563,6 +569,12 @@ func Root() *graphql.Object {
 						Type: graphql.NewNonNull(graphql.String),
 					},
 					"image": &graphql.ArgumentConfig{
+						Type: graphql.NewNonNull(graphql.String),
+					},
+					"description": &graphql.ArgumentConfig{
+						Type: graphql.NewNonNull(graphql.String),
+					},
+					"termCondition": &graphql.ArgumentConfig{
 						Type: graphql.NewNonNull(graphql.String),
 					},
 				},

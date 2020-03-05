@@ -2,6 +2,7 @@ package promo
 
 import (
 	"../../connection"
+	"../core"
 	"log"
 	"time"
 )
@@ -31,6 +32,9 @@ func GetPromoBYID(id int) Promo {
 	defer database.Close()
 
 	var promo Promo
+	if core.ValidateAPIKey() == false {
+		return promo
+	}
 	database.Where("id = ?", id).First(&promo)
 
 	return promo
@@ -41,6 +45,9 @@ func GetAnotherPromo(id int) []Promo {
 	defer database.Close()
 
 	var promo []Promo
+	if core.ValidateAPIKey() == false {
+		return promo
+	}
 	database.Where("id != ?", id).Limit(4).Find(&promo)
 
 	return promo

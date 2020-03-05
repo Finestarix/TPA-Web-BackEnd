@@ -104,3 +104,12 @@ func GetHotelByLatLong(p graphql.ResolveParams) (i interface{}, err error) {
 
 	return hotel, nil
 }
+
+func GetHotelByRadius(p graphql.ResolveParams) (i interface{}, err error) {
+	latitude := p.Args["latitude"].(float64)
+	longitude := p.Args["longitude"].(float64)
+
+	hotel := models.GetHotelByRadius(latitude, longitude);
+
+	return hotel, nil
+}

@@ -2,6 +2,7 @@ package user
 
 import (
 	"../../connection"
+	"../core"
 	"log"
 	"time"
 )
@@ -40,6 +41,9 @@ func GetAllAdmin() []Admin {
 	defer database.Close()
 
 	var admins []Admin
+	if core.ValidateAPIKey() == false {
+		return admins
+	}
 	database.Find(&admins)
 
 	return admins
@@ -64,6 +68,9 @@ func ValidateAdminLogin(email string, password string) Admin {
 	defer database.Close()
 
 	var admin Admin
+	if core.ValidateAPIKey() == false {
+		return admin
+	}
 	database.
 		Where("email = ? and password = ?", email, password).
 		First(&admin)

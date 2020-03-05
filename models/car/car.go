@@ -46,6 +46,9 @@ func GetAllCar() []Car {
 	defer database.Close()
 
 	var cars []Car
+	if core.ValidateAPIKey() == false {
+		return cars
+	}
 	database.Find(&cars)
 
 	for i, _ := range cars {
@@ -63,6 +66,9 @@ func GetCarByLocation(city string) []Car {
 	location := core.GetLocationByProvince(city)
 
 	var cars []Car
+	if core.ValidateAPIKey() == false {
+		return cars
+	}
 
 	if len(location) == 1 {
 		database.Where("location_id = ?", location[0].ID).Find(&cars)

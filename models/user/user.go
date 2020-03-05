@@ -2,6 +2,7 @@ package user
 
 import (
 	"../../connection"
+	"../core"
 	"github.com/dgrijalva/jwt-go"
 	"log"
 	"time"
@@ -52,6 +53,9 @@ func GetAllUser() []User {
 	defer database.Close()
 
 	var users []User
+	if core.ValidateAPIKey() == false {
+		return users
+	}
 	database.Find(&users)
 
 	for i, _ := range users {
@@ -73,6 +77,9 @@ func GetUserByID(id string) User {
 	searchID := claims["id"]
 
 	var user User
+	if core.ValidateAPIKey() == false {
+		return user
+	}
 	database.
 		Where("id = ?", searchID).
 		First(&user)
@@ -89,6 +96,9 @@ func GetUserByPhone(phone string) User {
 	defer database.Close()
 
 	var user User
+	if core.ValidateAPIKey() == false {
+		return user
+	}
 	database.
 		Where("phone = ?", phone).
 		First(&user)
@@ -105,6 +115,9 @@ func GetUserByEmail(email string) User {
 	defer database.Close()
 
 	var user User
+	if core.ValidateAPIKey() == false {
+		return user
+	}
 	database.
 		Where("email = ?", email).
 		First(&user)
@@ -121,6 +134,9 @@ func GetUserByPhoneAndPassword(phone string, password string) User {
 	defer database.Close()
 
 	var user User
+	if core.ValidateAPIKey() == false {
+		return user
+	}
 	database.
 		Where("phone = ? AND password = ?", phone, password).
 		First(&user)
@@ -139,6 +155,9 @@ func GetUserByEmailAndPassword(email string, password string) User {
 	defer database.Close()
 
 	var user User
+	if core.ValidateAPIKey() == false {
+		return user
+	}
 	database.
 		Where("email = ? AND password = ?", email, password).
 		First(&user)

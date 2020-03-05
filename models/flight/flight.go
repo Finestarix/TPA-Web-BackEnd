@@ -2,6 +2,7 @@ package flight
 
 import (
 	"../../connection"
+	"../core"
 	"log"
 	"time"
 )
@@ -48,6 +49,9 @@ func GetAllFlight() []Flight {
 	defer database.Close()
 
 	var flight []Flight
+	if core.ValidateAPIKey() == false {
+		return flight
+	}
 	database.Find(&flight)
 
 	for i, _ := range flight {
@@ -69,6 +73,9 @@ func GetFlightByID(id int) Flight {
 	defer database.Close()
 
 	var flight Flight
+	if core.ValidateAPIKey() == false {
+		return flight
+	}
 	database.
 		Where("id = ?", id).
 		First(&flight)
@@ -84,6 +91,9 @@ func GetFlightByAirport(fromAirportName string, toAirportName string, date time.
 	toAirport := GetFlightAirportByCode(toAirportName)
 
 	var flight []Flight
+	if core.ValidateAPIKey() == false {
+		return flight
+	}
 	database.
 		Where("from_airport_id = ? AND to_airport_id = ? AND DATE_PART('day',arrival_time) = ?",
 			fromAirport.ID, toAirport.ID, date.Day()).
@@ -108,6 +118,10 @@ func InsertFlight(companyName string, fromAirportName string, arrivalTime time.T
 
 	database := connection.GetConnection()
 	defer database.Close()
+
+	if price <= 0 {
+		return nil
+	}
 
 	company := GetFlightCompanyByName(companyName)
 	fromAirport := GetFlightAirportByCode(fromAirportName)

@@ -2,6 +2,7 @@ package blog
 
 import (
 	"../../connection"
+	"../core"
 	"log"
 	"time"
 )
@@ -44,16 +45,23 @@ func GetAllBlog() []Blog {
 	defer database.Close()
 
 	var blogs []Blog
+	if core.ValidateAPIKey() == false {
+		return blogs
+	}
 	database.Find(&blogs)
 
 	return blogs
 }
 
 func GetBlogByID(id int) Blog {
+
 	database := connection.GetConnection()
 	defer database.Close()
 
 	var blog Blog
+	if core.ValidateAPIKey() == false {
+		return blog
+	}
 	database.Where("id = ?", id).First(&blog)
 
 	return blog
@@ -64,6 +72,9 @@ func GetRecommendedBlog(id int) []Blog{
 	defer database.Close()
 
 	var blogs []Blog
+	if core.ValidateAPIKey() == false {
+		return blogs
+	}
 	database.Where("id != ?", id).Limit(4).Find(&blogs)
 
 	return blogs
@@ -72,6 +83,10 @@ func GetRecommendedBlog(id int) []Blog{
 func InsertBlog(userID int, title string, content string, image string, category string) *Blog {
 	database := connection.GetConnection()
 	defer database.Close()
+
+	if len(title) < 5 {
+		return nil
+	}
 
 	newBlog := &Blog{
 		UserID:    userID,
@@ -92,6 +107,9 @@ func UpdateBlog(id int, content string, image string, category string) Blog {
 	defer database.Close()
 
 	var updateBlog Blog
+	if core.ValidateAPIKey() == false {
+		return updateBlog
+	}
 	database.
 		Model(&updateBlog).
 		Where("id = ?", id).

@@ -30,10 +30,16 @@ func GetEntertainmentType() *graphql.Object {
 				"date": &graphql.Field{
 					Type: graphql.String,
 				},
-				"category": &graphql.Field{
+				"type": &graphql.Field{
 					Type: graphql.String,
 				},
 				"image": &graphql.Field{
+					Type: graphql.String,
+				},
+				"description": &graphql.Field{
+					Type: graphql.String,
+				},
+				"termCondition": &graphql.Field{
 					Type: graphql.String,
 				},
 			},

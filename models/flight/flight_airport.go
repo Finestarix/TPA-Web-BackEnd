@@ -34,6 +34,9 @@ func GetAllFlightAirport() []FlightAirport {
 	defer database.Close()
 
 	var airport []FlightAirport
+	if core.ValidateAPIKey() == false {
+		return airport
+	}
 	database.Where("code != ?", "NULL").Find(&airport)
 
 	for i, _ := range airport {
@@ -65,6 +68,9 @@ func GetFlightAirportByCode(code string) FlightAirport {
 	defer database.Close()
 
 	var airport FlightAirport
+	if core.ValidateAPIKey() == false {
+		return airport
+	}
 	database.Where("code = ?", code).First(&airport)
 
 	database.Model(&airport).Related(&airport.Location, "location_id")

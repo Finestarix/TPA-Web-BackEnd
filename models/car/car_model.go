@@ -2,6 +2,7 @@ package car
 
 import (
 	"../../connection"
+	"../core"
 	"log"
 	"time"
 )
@@ -43,6 +44,9 @@ func GetAllCarModel() []CarModel {
 	defer database.Close()
 
 	var cars []CarModel
+	if core.ValidateAPIKey() == false {
+		return cars
+	}
 	database.Find(&cars)
 
 	return cars
@@ -53,6 +57,9 @@ func GetCarModelByModel(model string) CarModel {
 	defer database.Close()
 
 	var cars CarModel
+	if core.ValidateAPIKey() == false {
+		return cars
+	}
 	database.
 		Where("model = ?", model).
 		First(&cars)

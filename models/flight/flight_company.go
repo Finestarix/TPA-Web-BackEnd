@@ -2,6 +2,7 @@ package flight
 
 import (
 	"../../connection"
+	"../core"
 	"log"
 	"time"
 )
@@ -30,6 +31,9 @@ func GetAllFlightCompany() []FlightCompany {
 	defer database.Close()
 
 	var company []FlightCompany
+	if core.ValidateAPIKey() == false {
+		return company
+	}
 	database.Find(&company)
 
 	return company
@@ -40,6 +44,9 @@ func GetFlightCompanyByName(name string) FlightCompany {
 	defer database.Close()
 
 	var company FlightCompany
+	if core.ValidateAPIKey() == false {
+		return company
+	}
 	database.Where("name = ?", name).First(&company)
 
 	return company
